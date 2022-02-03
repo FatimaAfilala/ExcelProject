@@ -1,0 +1,201 @@
+stages:
+  - test
+  - docker-build
+  - oc-tag
+  - deploy
+
+# Use the acc-py-devtools templates found at
+# https://gitlab.cern.ch/-/ide/project/acc-co/devops/python/acc-py-devtools/blob/master/-/acc_py_devtools/templates/gitlab-ci/python.yml.
+include:
+ - project: acc-co/devops/python/acc-py-devtools
+   file: acc_py_devtools/templates/gitlab-ci/python.yml
+
+variables:
+  project_name: cara
+  PY_VERSION: "3.9"
+
+
+# ###################################################################################################
+# Test code
+
+# A full installation of CARA, tested with pytest.
+test_install:
+  extends: .acc_py_full_test
+
+
+# A development installation of CARA tested with pytest.
+test_dev:
+  extends: .acc_py_dev_test
+
+
+# A development installation of CARA tested with pytest.
+test_dev-39:
+  variables:
+    PY_VERSION: "3.9"
+  extends: .acc_py_dev_test
+
+
+# ###################################################################################################
+# Test OpenShift config
+
+.test_openshift_config:
+  stage: test
+  rules:
+    - if: '$OC_TOKEN && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == $BRANCH'
+      allow_failure: true  # The branch must represent what is deployed.  FIXME: change to true because of a diff between ConfigMaps
+    - if: '$OC_TOKEN && $CI_MERGE_REQUEST_EVENT_TYPE != "detached"'
+      allow_failure: true   # Anything other than the branch may fail without blocking the pipeline.
+  image: registry.cern.ch/docker.io/mambaorg/micromamba
+  before_script:
+    - micromamba create --yes -p $HOME/env python=3.9 ruamel.yaml wget -c conda-forge
+    - export PATH=$HOME/env/bin/:$PATH
+    - wget https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+    - tar xzf ./openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+    - mv openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc $HOME/env/bin/
+  script:
+    - cd ./app-config/openshift
+    - oc login ${OC_SERVER} --token="${OC_TOKEN}"
+    - python ./config-fetch.py ${CARA_INSTANCE} --output-directory ./${CARA_INSTANCE}/actual
+    - python ./config-generate.py ${CARA_INSTANCE} --output-directory ./${CARA_INSTANCE}/expected
+    - python ./config-normalise.py ./${CARA_INSTANCE}/actual ./${CARA_INSTANCE}/actual-normed
+    - python ./config-normalise.py ./${CARA_INSTANCE}/expected ./${CARA_INSTANCE}/expected-normed
+    - diff -u ./${CARA_INSTANCE}/actual-normed/ ./${CARA_INSTANCE}/expected-normed/
+  artifacts:
+    paths:
+      - ./app-config/openshift/${CARA_INSTANCE}/actual
+      - ./app-config/openshift/${CARA_INSTANCE}/expected
+
+
+check_openshift_config_test:
+  extends: .test_openshift_config
+  variables:
+    CARA_INSTANCE: 'test-cara'
+    BRANCH: 'live/test-cara'
+    OC_SERVER: https://api.paas.okd.cern.ch
+    OC_TOKEN: "${OPENSHIFT_CONFIG_CHECKER_TOKEN_TEST_CARA}"
+
+
+check_openshift_config_prod:
+  extends: .test_openshift_config
+  variables:
+    CARA_INSTANCE: 'cara'
+    BRANCH: 'master'
+    OC_SERVER: https://openshift.cern.ch
+    OC_TOKEN: "${OPENSHIFT_CONFIG_CHECKER_TOKEN_PROD}"
+
+
+# ###################################################################################################
+# Build docker images
+
+.image_builder:
+  # Build and push images to the openshift instance, which automatically triggers an application re-deployment.
+  stage: docker-build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "live/test-cara"'
+      variables:
+        DOCKER_REGISTRY: $CI_REGISTRY_IMAGE
+        IMAGE_TAG: test-cara-latest
+        KANIKO_AUTH: "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}"
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      variables:
+        DOCKER_REGISTRY: "${OPENSHIFT_DOCKER_REGISTRY_PROD}"
+        # change to `cara-latest` after moving prod to OKD4
+        IMAGE_TAG: latest
+        KANIKO_AUTH: "{\"auths\":{\"$OPENSHIFT_DOCKER_REGISTRY_PROD\":{\"auth\":\"$OPENSHIFT_DOCKER_TOKEN_PROD\"}}}"
+  image:
+    # Based on guidance at https://gitlab.cern.ch/gitlabci-examples/build_docker_image.
+    name: gitlab-registry.cern.ch/ci-tools/docker-image-builder
+    entrypoint: [""]
+  script:
+    - echo ${KANIKO_AUTH} > /kaniko/.docker/config.json
+    - echo "Building ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest Docker image..."
+    - /kaniko/executor --context ${CI_PROJECT_DIR}/${DOCKER_CONTEXT_DIRECTORY} --dockerfile ${CI_PROJECT_DIR}/${DOCKERFILE_DIRECTORY}/Dockerfile --destination ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+
+
+auth-service-image_builder:
+  extends:
+    - .image_builder
+  variables:
+    IMAGE_NAME: auth-service
+    DOCKERFILE_DIRECTORY: app-config/auth-service
+    DOCKER_CONTEXT_DIRECTORY: app-config/auth-service
+
+
+cara-webservice-image_builder:
+  extends:
+    - .image_builder
+  variables:
+    IMAGE_NAME: cara-webservice
+    DOCKERFILE_DIRECTORY: app-config/cara-webservice
+    DOCKER_CONTEXT_DIRECTORY: ""
+
+
+oci_calculator:
+  extends:
+    - .image_builder
+  variables:
+    IMAGE_NAME: calculator
+    DOCKERFILE_DIRECTORY: app-config/cara-public-docker-image
+    DOCKER_CONTEXT_DIRECTORY: ""
+
+
+# ###################################################################################################
+# Link build Docker images OpenShift <-> GitLab registry
+
+.link_docker_images_with_gitlab_registry:
+  stage: oc-tag
+  image: gitlab-registry.cern.ch/paas-tools/openshift-client:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "live/test-cara"'
+      variables:
+        OC_SERVER: "https://api.paas.okd.cern.ch"
+        OC_PROJECT: "test-cara"
+        OC_TOKEN: ${OPENSHIFT_CARA_TEST_DEPLOY_TOKEN}
+        IMAGE_TAG: test-cara-latest
+    # UNCOMMENT when prod migrated to OKD4
+    # - if: '$CI_COMMIT_BRANCH == "master"'
+    #   variables:
+    #     OC_SERVER: "https://openshift.cern.ch"
+    #     OC_PROJECT: "cara"
+    #     OC_TOKEN: ${OPENSHIFT_CARA_DEPLOY_TOKEN}
+    #     IMAGE_TAG: cara-latest
+  script:
+     - oc tag --source=docker ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest --token ${OC_TOKEN} --server=${OC_SERVER} -n ${OC_PROJECT}
+
+link_auth-service_with_gitlab_registry:
+  extends:
+    - .link_docker_images_with_gitlab_registry
+  variables:
+    IMAGE_NAME: auth-service
+
+link_cara-webservice_with_gitlab_registry:
+  extends:
+    - .link_docker_images_with_gitlab_registry
+  variables:
+    IMAGE_NAME: cara-webservice
+
+link_calculator_with_gitlab_registry:
+  extends:
+    - .link_docker_images_with_gitlab_registry
+  variables:
+    IMAGE_NAME: calculator
+
+
+# ###################################################################################################
+# Trigger build of CARA router on OpenShift
+
+trigger_cara-router_build_on_openshift:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "live/test-cara"'
+      variables:
+        OC_SERVER: "https://api.paas.okd.cern.ch"
+        OC_PROJECT: "test-cara"
+        BUILD_WEBHOOK_SECRET: ${OPENSHIFT_TEST_BUILD_WEBHOOK_SECRET}
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      variables:
+        OC_SERVER: "https://openshift.cern.ch"
+        OC_PROJECT: "cara"
+        BUILD_WEBHOOK_SECRET: ${OPENSHIFT_BUILD_WEBHOOK_SECRET}
+  script:
+     - curl -X POST -k ${OC_SERVER}/apis/build.openshift.io/v1/namespaces/${OC_PROJECT}/buildconfigs/cara-router/webhooks/${BUILD_WEBHOOK_SECRET}/generic

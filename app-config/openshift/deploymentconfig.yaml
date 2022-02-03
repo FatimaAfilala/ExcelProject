@@ -1,0 +1,329 @@
+---
+  kind: "Template"
+  apiVersion: template.openshift.io/v1
+  metadata:
+    name: "cara-application"
+    annotations:
+      description: "CARA application OpenShift template."
+      tags: "cara-application"
+  labels:
+    template: "cara-application"
+  objects:
+    -
+      apiVersion: apps.openshift.io/v1
+      kind: DeploymentConfig
+      metadata:
+        name: auth-service
+        labels:
+          app: auth-service
+      spec:
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              app: auth-service
+              deploymentconfig: auth-service
+          spec:
+            containers:
+              - name: auth-service
+                image: '${PROJECT_NAME}/auth-service'
+                ports:
+                  - containerPort: 8080
+                    protocol: TCP
+                envFrom:
+                  - configMapRef:
+                      name: auth-service
+                  - secretRef:
+                      name: auth-service-secrets
+                imagePullPolicy: Always
+                resources: {}
+                terminationMessagePath: /dev/termination-log
+                terminationMessagePolicy: File
+            dnsPolicy: ClusterFirst
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext: { }
+            terminationGracePeriodSeconds: 30
+        strategy:
+          activeDeadlineSeconds: 21600
+          resources: { }
+          rollingParams:
+            intervalSeconds: 1
+            maxSurge: 25%
+            maxUnavailable: 25%
+            timeoutSeconds: 600
+            updatePeriodSeconds: 1
+          type: Rolling
+        test: false
+        selector:
+          deploymentconfig: auth-service
+        triggers:
+          - type: ConfigChange
+          - type: ImageChange
+            imageChangeParams:
+              automatic: true
+              containerNames:
+                - auth-service
+              from:
+                kind: ImageStreamTag
+                name: 'auth-service:latest'
+                namespace: ${PROJECT_NAME}
+    -
+      apiVersion: apps.openshift.io/v1
+      kind: DeploymentConfig
+      metadata:
+        name: cara-app
+        labels: {app: cara-app}
+      spec:
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              app: cara-app
+          spec:
+            containers:
+              - name: cara-webservice
+                env:
+                - name: APP_NAME
+                  value: cara-voila
+                image: '${PROJECT_NAME}/cara-webservice'
+                ports:
+                  - containerPort: 8080
+                    protocol: TCP
+                imagePullPolicy: Always
+                resources:
+                  limits: { cpu: '1', memory: 1Gi }
+                  requests: { cpu: 1m, memory: 512Mi }
+                terminationMessagePath: /dev/termination-log
+                terminationMessagePolicy: File
+            dnsPolicy: ClusterFirst
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext: { }
+            terminationGracePeriodSeconds: 30
+        strategy:
+          activeDeadlineSeconds: 21600
+          resources: { }
+          rollingParams:
+            intervalSeconds: 1
+            maxSurge: 25%
+            maxUnavailable: 25%
+            timeoutSeconds: 600
+            updatePeriodSeconds: 1
+          type: Rolling
+        test: false
+        selector:
+          app: cara-app
+        triggers:
+          - type: ConfigChange
+          - type: ImageChange
+            imageChangeParams:
+              automatic: true
+              containerNames:
+                - cara-webservice
+              from:
+                kind: ImageStreamTag
+                name: 'cara-webservice:latest'
+                namespace: ${PROJECT_NAME}
+    -
+      apiVersion: apps.openshift.io/v1
+      kind: DeploymentConfig
+      metadata:
+        name: cara-router
+      spec:
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              app: cara-router
+          spec:
+            containers:
+              - name: cara-router
+                image: '${PROJECT_NAME}/cara-router'
+                ports:
+                  - containerPort: 8080
+                    protocol: TCP
+                  - containerPort: 8443
+                    protocol: TCP
+                imagePullPolicy: Always
+                resources: {}
+                terminationMessagePath: /dev/termination-log
+                terminationMessagePolicy: File
+            dnsPolicy: ClusterFirst
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext: { }
+            terminationGracePeriodSeconds: 30
+        strategy:
+          activeDeadlineSeconds: 21600
+          resources: { }
+          rollingParams:
+            intervalSeconds: 1
+            maxSurge: 25%
+            maxUnavailable: 25%
+            timeoutSeconds: 600
+            updatePeriodSeconds: 1
+          type: Rolling
+        test: false
+        selector:
+          app: cara-router
+        triggers:
+          - type: ImageChange
+            imageChangeParams:
+              automatic: true
+              containerNames:
+                - cara-router
+              from:
+                kind: ImageStreamTag
+                name: 'cara-router:latest'
+                namespace: ${PROJECT_NAME}
+          - type: ConfigChange
+    -
+      apiVersion: apps.openshift.io/v1
+      kind: DeploymentConfig
+      metadata:
+        name: cara-webservice
+        labels:
+          image: cara-webservice
+          app: cara-webservice
+      spec:
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              app: cara-webservice
+          spec:
+            containers:
+              - name: cara-webservice
+                env:
+                - name: COOKIE_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      key: COOKIE_SECRET
+                      name: auth-service-secrets
+                - name: REPORT_PARALLELISM
+                  value: '3'
+                - name: APP_NAME
+                  value: cara-webservice
+                - name: CARA_CALCULATOR_PREFIX
+                  value: /calculator-cern
+                - name: CARA_THEME
+                  value: cara/apps/templates/cern
+                image: '${PROJECT_NAME}/cara-webservice'
+                ports:
+                  - containerPort: 8080
+                    protocol: TCP
+                imagePullPolicy: Always
+                readinessProbe:
+                  failureThreshold: 3
+                  httpGet:
+                    path: /calculator-cern
+                    port: 8080
+                    scheme: HTTP
+                  initialDelaySeconds: 3
+                  periodSeconds: 10
+                  successThreshold: 1
+                  timeoutSeconds: 1
+                resources:
+                  limits:
+                    cpu: '3'
+                    memory: 3Gi
+                  requests:
+                    cpu: '1'
+                    memory: 1Gi
+                terminationMessagePath: /dev/termination-log
+                terminationMessagePolicy: File
+            dnsPolicy: ClusterFirst
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext: { }
+            terminationGracePeriodSeconds: 30
+        strategy:
+          activeDeadlineSeconds: 21600
+          resources: { }
+          rollingParams:
+            intervalSeconds: 1
+            maxSurge: 25%
+            maxUnavailable: 25%
+            timeoutSeconds: 600
+            updatePeriodSeconds: 1
+          type: Rolling
+        test: false
+        selector:
+          app: cara-webservice
+        triggers:
+          - type: ImageChange
+            imageChangeParams:
+              automatic: true
+              containerNames:
+                - cara-webservice
+              from:
+                kind: ImageStreamTag
+                name: 'cara-webservice:latest'
+                namespace: ${PROJECT_NAME}
+          - type: ConfigChange
+    -
+      apiVersion: apps.openshift.io/v1
+      kind: DeploymentConfig
+      metadata:
+        name: cara-calculator-open
+        labels:
+          image: cara-webservice
+          app: cara-calculator-open
+      spec:
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              app: cara-calculator-open
+          spec:
+            containers:
+              - name: cara-calculator-open
+                env:
+                - name: APP_NAME
+                  value: cara-webservice
+                - name: CARA_CALCULATOR_PREFIX
+                  value: /calculator-open
+                image: '${PROJECT_NAME}/cara-webservice'
+                ports:
+                  - containerPort: 8080
+                    protocol: TCP
+                imagePullPolicy: Always
+                resources: {}
+                terminationMessagePath: /dev/termination-log
+                terminationMessagePolicy: File
+            dnsPolicy: ClusterFirst
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext: { }
+            terminationGracePeriodSeconds: 30
+        strategy:
+          activeDeadlineSeconds: 21600
+          resources: { }
+          rollingParams:
+            intervalSeconds: 1
+            maxSurge: 25%
+            maxUnavailable: 25%
+            timeoutSeconds: 600
+            updatePeriodSeconds: 1
+          type: Rolling
+        test: false
+        selector:
+          app: cara-calculator-open
+        triggers:
+          - type: ConfigChange
+          - type: ImageChange
+            imageChangeParams:
+              automatic: true
+              containerNames:
+                - cara-calculator-open
+              from:
+                kind: ImageStreamTag
+                name: 'cara-webservice:latest'
+                namespace: ${PROJECT_NAME}
+          - type: ConfigChange
+
+  parameters:
+    - name: PROJECT_NAME
+      description: The name of this project, e.g. test-cara
+      required: true

@@ -1,0 +1,17 @@
+__pycache__
+.ipynb_checkpoints
+*.egg-info
+*.DS_Store
+*.pyc
+
+# Editor stuff
+*.swp
+.idea
+.vscode
+
+env*
+venv
+support
+
+# openshift config check folder
+app-config/openshift/test-cara
