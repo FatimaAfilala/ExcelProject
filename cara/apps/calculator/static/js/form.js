@@ -64,9 +64,15 @@ function require_fields(obj) {
     case "mask_on":
       require_mask(true);
       break;
+    case "mask_on1":
+      require_mask1(true);
+      break;  
     case "mask_off":
       require_mask(false);
       break;
+    case "mask_off1":
+        require_mask1(true);
+        break;  
     case "exposed_lunch_option_no":
     case "infected_lunch_option_no":
       require_lunch($(obj).attr('id'), false);
@@ -181,6 +187,13 @@ function require_mask(option) {
   $("#mask_type_ffp2").prop('required', option);
 }
 
+function require_mask1(option) {
+  $("#mask_type_11").prop('required', option);
+  $("#mask_type_ffp21").prop('required', option);
+}
+
+
+
 function require_hepa(option) {
   require_input_field("#hepa_amount", option);
   set_disabled_status("#hepa_amount", !option);
@@ -237,7 +250,23 @@ function on_ventilation_type_change() {
 }
 
 function on_wearing_mask_change() {
+  console.log(1)
   wearing_mask = $('input[type=radio][name=mask_wearing_option]')
+  wearing_mask.each(function (index) {
+    if (this.checked) {
+      getChildElement($(this)).show();
+      require_fields(this);
+    }
+    else {
+      getChildElement($(this)).hide();
+      require_fields(this);
+    }
+  })
+}
+
+function on_wearing_mask_change2() {
+  console.log(2)
+  wearing_mask = $('input[type=radio][name=mask_wearing_option2]')
   wearing_mask.each(function (index) {
     if (this.checked) {
       getChildElement($(this)).show();
@@ -575,8 +604,10 @@ $(document).ready(function () {
   // When the mask_wearing_option changes we want to make its respective
   // children show/hide.
   $("input[type=radio][name=mask_wearing_option]").change(on_wearing_mask_change);
+  $("input[type=radio][name=mask_wearing_option2]").change(on_wearing_mask_change2);
   // Call the function now to handle forward/back button presses in the browser.
   on_wearing_mask_change();
+  on_wearing_mask_change2();
 
   // Setup the maximum number of people at page load (to handle back/forward),
   // and update it when total people is changed.

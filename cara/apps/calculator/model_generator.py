@@ -56,6 +56,7 @@ class FormData:
     location_longitude: float
     mask_type: str
     mask_wearing_option: str
+    mask_wearing_option2: str
     mechanical_ventilation_type: str
     calculator_version: str
     opening_distance: float
@@ -109,6 +110,7 @@ class FormData:
         'location_name': _NO_DEFAULT,
         'mask_type': 'Type I',
         'mask_wearing_option': 'mask_off',
+        'mask_wearing_option2': 'mask_off',
         'mechanical_ventilation_type': 'not-applicable',
         'opening_distance': 0.,
         'room_heating_option': False,
@@ -200,6 +202,7 @@ class FormData:
                              ('mechanical_ventilation_type', MECHANICAL_VENTILATION_TYPES),
                              ('mask_type', MASK_TYPES),
                              ('mask_wearing_option', MASK_WEARING_OPTIONS),
+                             ('mask_wearing_option2', MASK_WEARING_OPTIONS),
                              ('ventilation_type', VENTILATION_TYPES),
                              ('virus_type', VIRUS_TYPES),
                              ('volume_type', VOLUME_TYPES),
@@ -667,6 +670,7 @@ def baseline_raw_form_data():
         'location_name': 'Geneva',
         'mask_type': 'Type I',
         'mask_wearing_option': 'mask_off',
+        'mask_wearing_option2': 'mask_off',
         'mechanical_ventilation_type': '',
         'calculator_version': calculator.__version__,
         'opening_distance': '0.2',
