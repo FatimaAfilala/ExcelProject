@@ -1,0 +1,261 @@
+
+
+{
+    "Hospital":{
+        
+        "Hospital_patient" :
+        {
+            "Breathing": 7,   
+            "Talking": 2, 
+            "light exercise":1,
+            "Heavy exercise":0
+        },
+
+        "Nurse_working":
+        {   
+            "Breathing": 0,
+            "Talking": 0, 
+            "light exercise":4,
+            "Heavy exercise":6
+        },
+
+        "Physician_working": 
+        {
+            "Breathing": 0,
+            "Talking": 0, 
+            "light exercise":4,
+            "Heavy exercise":6
+        }
+        
+    },
+
+    "Business":
+    {
+        "office_worker":
+        {
+            "Breathing": 8,
+            "Talking": 2, 
+            "light exercise":6,
+            "Heavy exercise":4
+        },
+        "Workshop_worker":
+        {
+            "Breathing": 8,
+            "Talking": 2, 
+            "light exercise":4,
+            "Heavy exercise":6
+
+        },
+        "Meeting_participant":
+        {
+            "Breathing": 6,
+            "Talking": 3, 
+            "light exercise":0,
+            "Heavy exercise":1
+        },
+        "Meeting_leader":
+        {
+            "Breathing": 0,
+            "Talking": 8, 
+            "light exercise":2,
+            "Heavy exercise":0  
+        }
+    },
+
+    "Education":
+    {
+        "Student_sitting":
+        {
+            "Breathing": 8,
+            "Talking": 2, 
+            "light exercise":0,
+            "Heavy exercise":0  
+        },
+        "Professor_teaching":
+        {
+            "Breathing": 0,
+            "Talking": 8, 
+            "light exercise":2,
+            "Heavy exercise":0   
+        },
+        "Professor_conferencing":
+        {
+            "Breathing": 0,
+            "Talking": 4, 
+            "light exercise":6,
+            "Heavy exercise":0  
+        }
+    },
+    "Events":
+    {
+            "Concert_musician":
+            {
+                "Breathing": 2,
+                "Talking": 0, 
+                "light exercise":8,
+                "Heavy exercise":0 
+            },
+            "Concert_singer":
+            {
+                "Breathing": 0,
+                "Talking": 0, 
+                "light exercise":7,
+                "Heavy exercise":3 
+            },
+            "Concert_spectator_standing":
+            {
+                "Breathing": 0,
+                "Talking": 3, 
+                "light exercise":3,
+                "Heavy exercise":4 
+            },
+            "Concert_spectator_sitting":
+            {
+                "Breathing": 5,
+                "Talking": 2, 
+                "light exercise":3,
+                "Heavy exercise":0 
+            },
+            "Museum_visitor":
+            {
+                "Breathing": 0,
+                "Talking": 5, 
+                "light exercise":5,
+                "Heavy exercise":0 
+            },
+            "Theater_spectator":
+            {
+                "Breathing": 8,
+                "Talking": 0, 
+                "light exercise":2,
+                "Heavy exercise":0 
+            },
+            "Theater_actor":
+            {
+                "Breathing": 3,
+                "Talking": 5, 
+                "light exercise":2,
+                "Heavy exercise":0 
+            },
+            "Conferencer":
+            {   "Breathing": 0,
+                "Talking": 4, 
+                "light exercise":6,
+                "Heavy exercise":0 
+            },
+            "Conference_attendee":{
+                "Breathing": 8,
+                "Talking": 2, 
+                "light exercise":0,
+                "Heavy exercise":0 
+            }
+    },
+
+ 
+
+    "Restaurant and Bar":
+    {
+            "Guest_standing":
+            {
+                "Breathing": 2,
+                "Talking": 0, 
+                "light exercise":8,
+                "Heavy exercise":0 
+            },
+            "Guest_sitting":
+            {
+                "Breathing": 0,
+                "Talking": 8, 
+                "light exercise":2,
+                "Heavy exercise":0 
+            },
+            "Server":
+            {
+                "Breathing": 0,
+                "Talking": 0, 
+                "light exercise":10,
+                "Heavy exercise":0    
+            },
+            "Barrista":
+            {
+                "Breathing": 0,
+                "Talking": 5, 
+                "light exercise":5,
+                "Heavy exercise":0       
+            },
+            "Nightclub_dancing":{
+                "Breathing": 0,
+                "Talking": 0, 
+                "light exercise":2,
+                "Heavy exercise":8  
+            },
+            "Nightclub_sitting":
+            {
+                "Breathing": 0,
+                "Talking": 0, 
+                "light exercise":8,
+                "Heavy exercise":2  
+    },
+    "Stores and retail":
+    {      
+            "Customer_standing":
+            {
+                "Breathing": 0,
+                "Talking": 0, 
+                "light exercise":10,
+                "Heavy exercise":0 
+            },
+            "Cashier_sitting":
+            {
+                "Breathing": 0,
+                "Talking": 10, 
+                "light exercise":0,
+                "Heavy exercise":0  
+            },
+            "Vendor_standing":
+            {
+                "Breathing": 0,
+                "Talking": 0, 
+                "light exercise":8,
+                "Heavy exercise":2  
+            }
+    },
+    "Sport":
+    {    
+            "Musculation":
+            {
+                "Breathing": 0,
+                "Talking": 2, 
+                "light exercise":1,
+                "Heavy exercise":7  
+            },
+            "Floor_gymnastics":
+            {
+                "Breathing": 0,
+                "Talking": 0, 
+                "light exercise":3,
+                "Heavy exercise":7  
+            }, 
+            "Team_competition":  
+            {
+                "Breathing": 0,
+                "Talking": 3, 
+                "light exercise":0,
+                "Heavy exercise":7  
+            }
+    },
+    "Miscellaneous":
+    {    
+            "Trip_in_elevator":
+            {
+                "Breathing": 7,
+                "Talking": 0, 
+                "light exercise":3,
+                "Heavy exercise":0  
+            }
+    }            
+
+    }
+
+
+}

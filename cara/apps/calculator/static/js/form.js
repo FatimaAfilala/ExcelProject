@@ -221,6 +221,7 @@ function setMaxInfectedPeople() {
     max = 1;
     $("#training_limit_error").show();
   }
+  
 
   $("#infected_people").attr("max", max);
 }
