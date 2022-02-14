@@ -537,6 +537,9 @@
           <option value="25">25</option>
           <option value="30">30</option>
         </select><br>
+
+
+
       </div>
       <br>
     </div>
@@ -544,6 +547,85 @@
     <br style="clear:both;">
     <i>Coffee breaks are spread evenly throughout the day.</i><br>
 
+    <br>
+
+    <span id="activity_breaks">
+      <b>Alternative scenarios:</b>
+      <div data-tooltip="Scénarios alternatifs calculés à titre comparatif">
+        <span class="tooltip_text">?</span>
+      </div>
+    </span><br>
+
+        <div class="form-check">
+          <input type="checkbox" id="scenario_1" class="tabbed form-check-input scenario-id" name="scenario_1" checked="true" value='1'>
+          <label for="scenario_1" class="form-check-label col-sm-12">Sans BV, personne ne porte de masque</label>
+          <input type="checkbox" id="scenario_2" class="tabbed form-check-input scenario-id" name="scenario_2" checked="true" value='2'>
+          <label for="scenario_2" class="form-check-label col-sm-12">Sans BV, tout le monde porte un masque</label>
+          <input type="checkbox" id="scenario_3" class="tabbed form-check-input scenario-id" name="scenario_3" checked="true" value='3'>
+          <label for="scenario_3" class="form-check-label col-sm-12">Avec BV, personne ne porte de masque</label>
+
+          <input value="1;2;3" class="scenario-ids" name="scenarios_alt" type="hidden">
+        </div><br>        
+
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script>
+        //handle checkbox behaviour
+          $(".scenario-id").change(function(event) {
+            //console.log("--------------")
+            res=""
+
+            //retrieve which user is being added or removed
+            checkbox = event.target
+            checked = checkbox.checked
+            console.log(checked)
+            participant_id = checkbox.value.toString()
+            already_in = false
+            input = $(".scenario-ids")
+
+            if (checked) res=participant_id
+
+          //console.log("res before if")
+          //console.log(res)
+
+        if (input.val()!="") {
+          scenarios = input.val().split(";")
+      
+        for (var i=0;i<scenarios.length;i++) {
+          id = scenarios[i]
+          console.log("boucle for, id = ")
+          console.log(id)
+          if (id == participant_id) {
+            already_in = true
+            if (checked) {
+              if (res == "") {
+                res = res + id
+              }
+              else {
+                res = res + ";" + id
+                  
+              }
+            }
+          }
+          else {
+            if (res == "") {
+              res = res + id
+            }
+            else {
+              res = res + ";" + id
+            }
+            
+          }
+        }
+    
+    }
+
+    input.val(res)
+
+    console.log("participants à présent : " )
+    console.log(input.val())
+
+  })
+        </script>
     
     <br><br>
   </div> 

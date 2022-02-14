@@ -65,6 +65,10 @@ class FormData:
     room_number: str
     room_volume: float
     simulation_name: str
+    scenarios_alt: str  #"1;2;3"
+    scenario_1: str
+    scenario_2: str
+    scenario_3: str
     total_people: int
     ventilation_type: str
     virus_type: str
@@ -117,6 +121,10 @@ class FormData:
         'room_number': _NO_DEFAULT,
         'room_volume': 0.,
         'simulation_name': _NO_DEFAULT,
+        'scenarios_alt': "1;2;3",
+        'scenario_1': '',
+        'scenario_2': '',
+        'scenario_3': '',
         'total_people': _NO_DEFAULT,
         'ventilation_type': 'no_ventilation',
         'virus_type': 'SARS_CoV_2',
@@ -153,7 +161,6 @@ class FormData:
 
             if key not in cls._DEFAULTS:
                 raise ValueError(f'Invalid argument "{html.escape(key)}" given')
-
         instance = cls(**form_data)
         instance.validate()
         return instance
@@ -678,6 +685,10 @@ def baseline_raw_form_data():
         'room_heating_option': '0',
         'room_number': '123',
         'room_volume': '75',
+        'scenarios_alt': '1;2;3',
+        'scenario_1': '',
+        'scenario_2': '',
+        'scenario_3': '',
         'simulation_name': 'Test',
         'total_people': '10',
         'ventilation_type': 'natural_ventilation',
