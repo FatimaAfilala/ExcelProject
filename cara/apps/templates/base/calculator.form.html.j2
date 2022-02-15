@@ -272,26 +272,6 @@
 
     <span id="training_limit_error" class="red_text" hidden>Conference/Training activities limited to 1 infected<br></span>
     <hr width="80%">
-
-    <div class="form-group row">
-    <div class="col-sm-4"><label class="col-form-label">Activity type:</label></div>
-    <div class="col-sm-6">
-      <select id="activity_type" name="activity_type" class="form-control">
-        <option value="office">Office</option>
-        <option value="meeting">Meeting</option>
-        <option value="callcentre">Call Centre</option>
-        <option value="controlroom-day">Control Room - Day shift</option>
-        <option value="controlroom-night">Control Room - Night shift</option>
-        <option value="library">Library</option>
-        <option value="lab">Laboratory</option>
-        <option value="workshop">Workshop</option>
-        <option value="training">Conference/Training</option>
-        <option value="gym">Gym</option>
-      </select>
-    </div>
-    </div>
-
-  
   <div style=" margin-right:2rem;">
     <div name="exposed">
       <div class="boxMargin pb-0">
@@ -327,8 +307,8 @@
               <option value="Professor_conferencing">Professor conferencing</option>
             <optgroup > 
             <optgroup label="---- Events ----">
-              <option value="Concert_musician">Concert musician</option>
-              <option value="Concert_singer">Concert singer</option>
+              <option value="Concert_musician_soft_music">Concert musician (soft music)</option>
+              <option value="Concert_singer_rock">Concert singer (rock)</option>
               <option value="Concert_spectator_standing">Concert spectator (standing)</option>
               <option value="Concert_spectator_sitting">Concert spectator (sitting)</option>
               <option value="Museum_visitor">Museum visitor</option>
@@ -430,7 +410,8 @@
               <option value="Professor_conferencing2">Professor conferencing</option>
             <optgroup > 
             <optgroup label="---- Events ----">
-              <option value="Concert_musician2">Concert musician</option>
+               <option value="Concert_musician_soft_music2">Concert musician (soft music)</option>
+              <option value="Concert_singer_rock2">Concert singer (rock)</option>
               <option value="Concert_singer2">Concert singer</option>
               <option value="Concert_spectator_standing2">Concert spectator (standing)</option>
               <option value="Concert_spectator_sitting2">Concert spectator (sitting)</option>
@@ -481,14 +462,14 @@
             <div class='sub_title'>Type of masks used:</div>
             <div class='split'>
               <div>
-                <input type="radio" id="mask_type_11" name="mask_type" value="Type I" checked="checked" onclick="require_fields(this)">
+                <input type="radio" id="mask_type_11" name="mask_type2" value="Type I" checked="checked" onclick="require_fields(this)">
                   <label for="mask_type_11">
                     Surgical/Type I
                     <img class="mask_icons" src="/static/images/masks/t1.png">
                   </label>
               </div>
               <div>
-                <input type="radio" id="mask_type_ffp21"  name="mask_type" value="FFP2" onclick="require_fields(this)">
+                <input type="radio" id="mask_type_ffp21"  name="mask_type2" value="FFP2" onclick="require_fields(this)">
                   <label for="mask_type_ffp21">
                     Respirator/FFP2
                     <img class="mask_icons" src="/static/images/masks/ffp2.png">

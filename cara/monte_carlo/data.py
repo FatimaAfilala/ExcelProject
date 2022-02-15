@@ -22,6 +22,23 @@ activity_distributions = {
                                   LogNormal(1.1644665696723049, 0.21744554768657565)),
 }
 
+activity_distributions2 = {
+    'Seated': mc.Activity(LogNormal(-0.6872121723362303, 0.10498338229297108),
+                          LogNormal(-0.6872121723362303, 0.10498338229297108)),
+
+    'Standing': mc.Activity(LogNormal(-0.5742377578494785, 0.09373162411398223),
+                            LogNormal(-0.5742377578494785, 0.09373162411398223)),
+
+    'Light activity': mc.Activity(LogNormal(0.21380242785625422,0.09435378091059601),
+                                  LogNormal(0.21380242785625422,0.09435378091059601)),
+
+    'Moderate activity': mc.Activity(LogNormal(0.551771330362601, 0.1894616357138137),
+                                     LogNormal(0.551771330362601, 0.1894616357138137)),
+
+    'Heavy exercise': mc.Activity(LogNormal(1.1644665696723049, 0.21744554768657565),
+                                  LogNormal(1.1644665696723049, 0.21744554768657565)),
+}
+
 
 # From CERN-OPEN-2021-04 and refererences therein
 symptomatic_vl_frequencies = LogCustomKernel(
@@ -75,6 +92,11 @@ virus_distributions = {
 # https://doi.org/10.1016/j.jhin.2013.02.007
 # https://doi.org/10.4209/aaqr.2020.08.0531
 mask_distributions = {
+    'Type I': mc.Mask(Uniform(0.25, 0.80)),
+    'FFP2': mc.Mask(Uniform(0.83, 0.91)),
+}
+
+mask_distributions2 = {
     'Type I': mc.Mask(Uniform(0.25, 0.80)),
     'FFP2': mc.Mask(Uniform(0.83, 0.91)),
 }
