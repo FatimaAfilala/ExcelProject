@@ -8,6 +8,9 @@ import typing
 import urllib
 import zlib
 
+import json
+import os
+
 import jinja2
 import numpy as np
 
@@ -197,8 +200,8 @@ def non_zero_percentage(percentage: int) -> str:
 
 def manufacture_alternative_scenarios(form: FormData) -> typing.Dict[str, mc.ExposureModel]:
     scenarios = {}
-    # sans BV sans mask
     # sans BV avec mask
+    # sans BV sans mask
     # avec BV sans mask
     # si on coche rien, on fait les 4 scénar
 
@@ -228,24 +231,29 @@ def manufacture_alternative_scenarios(form: FormData) -> typing.Dict[str, mc.Exp
         scenarios_id=scenarios_alt.split(";")
         if "1" in scenarios_id:
             #Sans BV, personne ne porte de masque
+
             nobv_nomask = dataclass_utils.replace(form, mask_wearing_option='mask_off')
             nobv_nomask = dataclass_utils.replace(nobv_nomask, mask_wearing_option2='mask_off')
-            nobv_nomask = dataclass_utils.replace(nobv_nomask, hepa_option=False)
+            if form.uv_device!="None":
+                nobv_nomask = dataclass_utils.replace(nobv_nomask, uv_device="None")
             scenarios["no BV, no mask"]=nobv_nomask.build_mc_model()
         if "2" in scenarios_id:
             #Sans BV, tout le monde porte un masque du type de l'infecté ? de la population saine ?
             nobv_mask = dataclass_utils.replace(form, mask_wearing_option='mask_on')
             nobv_mask = dataclass_utils.replace(nobv_mask, mask_wearing_option2='mask_on')
-            nobv_mask = dataclass_utils.replace(nobv_mask, hepa_option=False)
-            scenarios["no BV, all mask"]=nobv_mask.build_mc_model()
+            if form.uv_device!="None":
+                nobv_mask = dataclass_utils.replace(nobv_mask, uv_device="None")
+            scenarios["no BV, all wearing mask " + form.mask_type]=nobv_mask.build_mc_model()
             #Pas besoin de changer le type de masque porté, l'option est remplie par l'utilisateur / par défaut mask type I
               
         if "3" in scenarios_id:
             #Avec BV, personne ne porte de masque
             bv_nomask = dataclass_utils.replace(form, mask_wearing_option='mask_off')
             bv_nomask = dataclass_utils.replace(bv_nomask, mask_wearing_option2='mask_off')
-            bv_nomask = dataclass_utils.replace(bv_nomask, hepa_option=True)
-            scenarios["BV, no mask"]=bv_nomask.build_mc_model()
+            if form.uv_device=="None":
+                bv_nomask = dataclass_utils.replace(bv_nomask, uv_device="BR1000")
+                bv_nomask = dataclass_utils.replace(bv_nomask, uv_speed=1200)
+            scenarios["BR1000 with 1200m^3/h, no mask"]=bv_nomask.build_mc_model()
             
     
     """

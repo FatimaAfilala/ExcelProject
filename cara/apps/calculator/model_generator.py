@@ -6,6 +6,9 @@ import typing
 
 import numpy as np
 
+import json
+import os
+
 from cara import models
 from cara import data
 import cara.data.weather
@@ -70,6 +73,8 @@ class FormData:
     scenario_2: str
     scenario_3: str
     total_people: int
+    uv_device: str
+    uv_speed: int
     ventilation_type: str
     virus_type: str
     volume_type: str
@@ -126,6 +131,8 @@ class FormData:
         'scenario_2': '',
         'scenario_3': '',
         'total_people': _NO_DEFAULT,
+        'uv_device': "BR500",
+        'uv_speed': 400,
         'ventilation_type': 'no_ventilation',
         'virus_type': 'SARS_CoV_2',
         'volume_type': _NO_DEFAULT,
@@ -354,7 +361,23 @@ class FormData:
         # to the air infiltration from the outside.
         # See CERN-OPEN-2021-004, p. 12.
         infiltration_ventilation = models.AirChange(active=always_on, air_exch=0.25)
-        if self.hepa_option:
+
+        accepted_devices = ["BR500","BR1000","BR5000","BR10000"]
+        accepted_viruses = ["SarS-CoV-2"]
+        if self.uv_device in accepted_devices:
+            with open(os.getcwd()+'\\cara\\config_BR.json') as json_file:
+                data = json.load(json_file)
+                Q2 = data[self.uv_device]["Q2"]
+                doseQ2 = data[self.uv_device]["Dose_Q2"]
+            with open(os.getcwd()+'\\cara\\config_D90.json') as json_file:
+                data = json.load(json_file)
+                if self.virus_type in accepted_viruses:
+                    D90 = data[self.virus_type]
+                else:
+                    D90 = data["SarS-CoV-2"]
+            uv= models.UVFilter(active=always_on, device=self.uv_device, speed=self.uv_speed,q2 = Q2, dose_q2=doseQ2, d90 = D90)
+            return models.MultipleVentilation((ventilation, uv, infiltration_ventilation))
+        #elif self.hepa_option:
             hepa = models.HEPAFilter(active=always_on, q_air_mech=self.hepa_amount)
             return models.MultipleVentilation((ventilation, hepa, infiltration_ventilation))
         else:
@@ -691,6 +714,9 @@ def baseline_raw_form_data():
         'scenario_3': '',
         'simulation_name': 'Test',
         'total_people': '10',
+        'uv_option': False,
+        'uv_device': "BR500",
+        'uv_speed': 400,
         'ventilation_type': 'natural_ventilation',
         'virus_type': 'SARS_CoV_2',
         'volume_type': 'room_volume_explicit',
