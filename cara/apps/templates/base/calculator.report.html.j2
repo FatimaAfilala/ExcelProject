@@ -285,40 +285,173 @@
 							<li><p class="data_text">Number of attendees and infected people: {{ form.total_people }} in attendance, of whom {{ form.infected_people }}
 							{{ "is" if form.infected_people == 1 else "are" }}
 							infected.</p></li>
-							<li><p class="data_text">
-							Activity type:
-							{% if form.activity_type == "office" %}
-							Office – typical scenario with all persons seated, talking occasionally (talking assumed for 1/3rd of the time).
-							{% elif form.activity_type == "meeting" %}
-							Meeting – typical scenario with all persons seated, one person talking at a time.
-							{% elif form.activity_type == "callcentre" %}
-							Call Centre = typical office-like scenario with all persons seated, all talking continuously.
-							{% elif form.activity_type == "controlroom-day" %}
-							Control Room (Day Shift) = specific control room scenario, all persons seated, all talking 50% of the time.
-							{% elif form.activity_type == "controlroom-night" %}
-							Control Room (Night Shift) = specific control room scenario with all persons seated, all talking for 10% of the time.
-							{% elif form.activity_type == "library" %}
-							Library = Library scenario with all persons seated, breathing and not talking.
-							{% elif form.activity_type == "workshop" %}
-							Workshop = assembly workshop environment, all persons doing moderate physical activity, talking 50% of the time.
-							{% elif form.activity_type == "training" %}
-							Conference/Training – one person (the speaker/trainer) standing, talking, all others seated, talking quietly (whispering). It is assumed the speaker/trainer is the infected person, for the worst case scenario.
-							{% elif form.activity_type == "lab" %}
-							Laboratory = Lab or technical environment, all persons doing light physical activity, talking 50% of the time.
-							{% elif form.activity_type == "gym" %}
-							Gym = For comparison only, all persons doing heavy physical exercise, breathing and not talking.
-							{% endif %}
-							</p></li>
 							<li><p class="data_text">Exposed occupant(s) activity time:</p></li>
 								<ul>
 									<li><p class="data_subtext">Start time: {{ form.exposed_start | minutes_to_time }}</p></li>
 									<li><p class="data_subtext">End time: {{ form.exposed_finish | minutes_to_time }}</p></li>
 								</ul>
+							<li><p class="data_text">
+							Role type for exposed occupant(s):
+							{% if form.role_type == "Hospital_patient" %}
+							Hospital patient
+							{% elif form.role_type == "Nurse_working" %}
+							Nurse working
+							{% elif form.role_type == "Physician_working" %}
+							Physician_working
+							{% elif form.role_type == "Office_worker" %}
+							Office worker
+							{% elif form.role_type == "Workshop_worker"%}
+							Workshop worker
+							{% elif form.role_type == "Meeting_participant"%}
+							Meeting participant
+							{% elif form.role_type == "Meeting_leader"%}
+							Meeting leader
+							{% elif form.role_type == "Student_sitting"%}
+							Student sitting
+							{% elif form.role_type == "Professor_teaching"%}
+							Professor teaching
+							{% elif form.role_type == "Professor_conferencing"%}
+							Professor conferencing
+							{% elif form.role_type == "Concert_musician_soft_music"%}
+							Concert musician (soft_music)
+							{% elif form.role_type == "Concert_musician_rock"%}
+							Concert musician (rock)
+							{% elif form.role_type == "Concert_singer"%}
+							Concert singer
+							{% elif form.role_type == "Concert_spectator_standing"%}
+							Concert spectator (standing)
+							{% elif form.role_type == "Concert_spectator_sitting"%}
+							Concert spectator (sitting)
+							{% elif form.role_type == "Museum_visitor"%}
+							Museum visitor
+							{% elif form.role_type == "Theater_spectator"%}
+							Theater spectator
+							{% elif form.role_type == "Theater_actor"%}
+							Theater actor
+							{% elif form.role_type == "Conferencer"%}
+							Conferencer
+							{% elif form.role_type == "Conference_attendee"%}
+							Conference attendee
+							{% elif form.role_type == "Guest_standing"%}
+							Guest standing
+							{% elif form.role_type == "Guest_sitting"%}
+							Guest sitting
+							{% elif form.role_type == "Server"%}
+							Server
+							{% elif form.role_type == "Barrista"%}
+							Barrista
+							{% elif form.role_type == "Nightclub_dancing"%}
+							Nightclub dancing
+							{% elif form.role_type == "Nightclub_sitting"%}
+							Nightclub sitting
+							{% elif form.role_type == "Customer_standing"%}
+							Customer standing
+							{% elif form.role_type == "Cashier_sitting"%}
+							Cashier sitting
+							{% elif form.role_type == "Vendor_standing"%}
+							Vendor_standing
+							{% elif form.role_type == "Musculation"%}
+							Musculation
+							{% elif form.role_type == "Floor_gymnastics"%}
+							Floor_gymnastics
+							{% elif form.role_type == "Team_competition"%}
+							Team competition
+							{% elif form.role_type == "Trip_in_elevator"%}
+							Trip in elevator
+							
+							{% endif %}
+							</p></li>
+							<li><p class="data_text">Mask wearing for exposed occupant(s):</p></li>
+									<ul>
+										<li><p class="data_text">Masks worn at workstations? {{ 'Yes' if form.mask_wearing_option == "mask_on" else 'No' }} </p></li>
+										{% if form.mask_wearing_option == "mask_on" %}
+										<li><p class="data_text">Mask type: {{ form.mask_type }}</p></li>
+										{% endif %}
+									</ul>
+							<br>
 							<li><p class="data_text">Infected occupant(s) activity time:</p></li>
 							<ul>
 								<li><p class="data_subtext">Start time: {{ form.infected_start | minutes_to_time }}</p></li>
 								<li><p class="data_subtext">End time: {{ form.infected_finish | minutes_to_time }}</p></li>
 							</ul>
+							<li><p class="data_text">
+							Role type for infected occupant(s):
+							{% if form.role_type2 == "Hospital_patient2" %}
+							Hospital patient
+							{#office – typical scenario with all persons seated, talking occasionally (talking assumed for 1/3rd of the time). #}
+							{% elif form.role_type2 == "Nurse_working2" %}
+							Nurse working
+							{% elif form.role_type2 == "Physician_working2" %}
+							Physician working
+							{% elif form.role_type2 == "Office_worker2" %}
+							Office worker
+							{% elif form.role_type2 == "Workshop_worker2"%}
+							Workshop worker
+							{% elif form.role_type2 == "Meeting_participant2"%}
+							Meeting participant
+							{% elif form.role_type2 == "Meeting_leader2"%}
+							Meeting leader
+							{% elif form.role_type2 == "Student_sitting2"%}
+							Student sitting
+							{% elif form.role_type2 == "Professor_teaching2"%}
+							Professor teaching
+							{% elif form.role_type2 == "Professor_conferencing2"%}
+							Professor conferencing
+							{% elif form.role_type2 == "Concert_musician_soft_music2"%}
+							Concert musician (soft_music)
+							{% elif form.role_type2 == "Concert_musician_rock2"%}
+							Concert musician (rock)
+							{% elif form.role_type2 == "Concert_singer2"%}
+							Concert singer
+							{% elif form.role_type2 == "Concert_spectator_standing2"%}
+							Concert spectator (standing)
+							{% elif form.role_type2 == "Concert_spectator_sitting2"%}
+							Concert spectator (sitting)
+							{% elif form.role_type2 == "Museum_visitor2"%}
+							Museum visitor
+							{% elif form.role_type2 == "Theater_spectator2"%}
+							Theater spectator
+							{% elif form.role_type2 == "Theater_actor2"%}
+							Theater actor
+							{% elif form.role_type2 == "Conferencer2"%}
+							Conferencer
+							{% elif form.role_type2 == "Conference_attendee2"%}
+							Conference attendee
+							{% elif form.role_type2 == "Guest_standing2"%}
+							Guest standing
+							{% elif form.role_type2 == "Guest_sitting2"%}
+							Guest sitting
+							{% elif form.role_type2 == "Server2"%}
+							Server
+							{% elif form.role_type2 == "Barrista2"%}
+							Barrista
+							{% elif form.role_type2 == "Nightclub_dancing2"%}
+							Nightclub dancing
+							{% elif form.role_type2 == "Nightclub_sitting2"%}
+							Nightclub sitting
+							{% elif form.role_type2 == "Customer_standing2"%}
+							Customer standing
+							{% elif form.role_type2 == "Cashier_sitting2"%}
+							Cashier sitting
+							{% elif form.role_type2 == "Vendor_standing2"%}
+							Vendor_standing
+							{% elif form.role_type2 == "Musculation2"%}
+							Musculation
+							{% elif form.role_type2 == "Floor_gymnastics2"%}
+							Floor_gymnastics
+							{% elif form.role_type2 == "Team_competition2"%}
+							Team competition
+							{% elif form.role_type2 == "Trip_in_elevator2"%}
+							Trip in elevator
+							{% endif %}
+							<li><p class="data_text">Mask wearing for infected occupant(s):</p></li>
+									<ul>
+										<li><p class="data_text">Masks worn at workstations? {{ 'Yes' if form.mask_wearing_option2 == "mask_on" else 'No' }} </p></li>
+										{% if form.mask_wearing_option2 == "mask_on" %}
+										<li><p class="data_text">Mask type: {{ form.mask_type2 }}</p></li>
+										{% endif %}
+									</ul>
+
 							<li><p class="data_text">Event for the month of {{ form.event_month }}</p></li>
 						</ul>
 					</div>
@@ -384,7 +517,7 @@
 						{% endif %}
 					</div>
 				</div>
-				<br>
+				{# <br>
 				<div class="card">
 					<div class="card-header"><strong>Mask wearing:</strong></div>
 					<div class="card-body">	
@@ -396,7 +529,7 @@
 						</ul>
 					</div>
 				</div>
-				<br>
+				<br> #}
 			{% endblock simulation_overview %}	
 		</div>
 		{% block report_preamble %}

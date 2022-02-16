@@ -272,26 +272,6 @@
 
     <span id="training_limit_error" class="red_text" hidden>Conference/Training activities limited to 1 infected<br></span>
     <hr width="80%">
-
-    <div class="form-group row">
-    <div class="col-sm-4"><label class="col-form-label">Activity type:</label></div>
-    <div class="col-sm-6">
-      <select id="activity_type" name="activity_type" class="form-control">
-        <option value="office">Office</option>
-        <option value="meeting">Meeting</option>
-        <option value="callcentre">Call Centre</option>
-        <option value="controlroom-day">Control Room - Day shift</option>
-        <option value="controlroom-night">Control Room - Night shift</option>
-        <option value="library">Library</option>
-        <option value="lab">Laboratory</option>
-        <option value="workshop">Workshop</option>
-        <option value="training">Conference/Training</option>
-        <option value="gym">Gym</option>
-      </select>
-    </div>
-    </div>
-
-  
   <div style=" margin-right:2rem;">
     <div name="exposed">
       <div class="boxMargin pb-0">
@@ -306,15 +286,60 @@
           <input type="time" id="exposed_finish" class="finish_time" data-time-group="exposed" data-lunch-break="exposed_lunch" name="exposed_finish" value="17:30" required>
         </div>
         </div>
-          {# <div class="col-sm-6">
+          <div class="col-sm-6">
           <label class="col-form-label">Role:</label>
-          <select id="role" name="role" class="form-control">
-            <option value="0"> </option>
-            <option value="1">Type 1</option>
-            <option value="2">Type 2</option>
-            <option value="3">Type 3</option>
+          <select id="role_type" name="role_type" class="form-control">
+            <option > </option>
+            <optgroup label="---- Hospital  ----">
+              <option value="Hospital_patient">Hospital patient</option>
+              <option value="Nurse_working">Nurse working</option>
+              <option value="Physician_working">Physician working</option>
+            <optgroup > 
+            <optgroup label="---- Business ----">
+              <option value="Office_worker">Office worker</option>
+              <option value="Workshop_worker">Workshop worker</option>
+              <option value="Meeting_participant">Meeting participant</option>
+              <option value="Meeting_leader">Meeting leader</option>
+            <optgroup > 
+            <optgroup label="---- Education ----">
+              <option value="Student_sitting">Student sitting</option>
+              <option value="Professor_teaching">Professor teaching</option>
+              <option value="Professor_conferencing">Professor conferencing</option>
+            <optgroup > 
+            <optgroup label="---- Events ----">
+              <option value="Concert_musician_soft_music">Concert musician (soft music)</option>
+              <option value="Concert_singer_rock">Concert singer (rock)</option>
+              <option value="Concert_spectator_standing">Concert spectator (standing)</option>
+              <option value="Concert_spectator_sitting">Concert spectator (sitting)</option>
+              <option value="Museum_visitor">Museum visitor</option>
+              <option value="Theater_spectator">Theater spectator</option>
+              <option value="Theater_actor">Theater actor</option>
+              <option value="Conferencer">Conferencer</option>
+              <option value="Conference_attendee">Conference attendee</option>
+            <optgroup > 
+             <optgroup label="---- Restaurant and Bar ----">
+              <option value="Guest_standing">Guest standing</option>
+              <option value="Guest_sitting">Guest sitting</option>
+              <option value="Server">Server</option>
+              <option value="Barrista">Barrista</option>
+              <option value="Nightclub_dancing">Nightclub dancing</option>
+              <option value="Nightclud_sitting">Nightclud sitting</option>
+            <optgroup > 
+            <optgroup label="---- Stores and retail ----">
+              <option value="Customer_standing">Customer standing</option>
+              <option value="Cashier_sitting">Cashier sitting</option>
+              <option value="Vendor_standing">Vendor standing</option>
+            <optgroup > 
+            <optgroup label="---- Sport ----">
+              <option value="Musculation">Musculation</option>
+              <option value="Floor_gymnastics">Floor gymnastics</option>
+              <option value="Team_competition">Team competition</option>
+            <optgroup > 
+            <optgroup label="---- Miscellaneous ----">
+              <option value="Trip_in_elevator">Trip in elevator</option>
+            <optgroup > 
           </select>
-        </div> #}
+        </div>
         <hr width="80%">
         
           <b>Face masks:</b>
@@ -364,15 +389,62 @@
           <input type="time" id="infected_finish" class="finish_time" data-time-group="infected" data-lunch-break="infected_lunch" name="infected_finish" value="17:30" required>
         </div>
         </div>
-        {# <div class="col-sm-6">
+        <div class="col-sm-6">
           <label class="col-form-label">Role:</label>
-          <select id="role" name="role" class="form-control">
-            <option value="0"> </option>
-            <option value="1">Type 1</option>
-            <option value="2">Type 2</option>
-            <option value="3">Type 3</option>
+          <select id="role_type2" name="role_type2" class="form-control">
+            <option > </option>
+            <optgroup label="---- Hospital  ----">
+              <option value="Hospital_patient2">Hospital patient</option>
+              <option value="Nurse_working2">Nurse working</option>
+              <option value="Physician_working2">Physician working</option>
+            <optgroup > 
+            <optgroup label="---- Business ----">
+              <option value="Office_worker2">Office worker</option>
+              <option value="Workshop_worker2">Workshop worker</option>
+              <option value="Meeting_participant2">Meeting participant</option>
+              <option value="Meeting_leader2">Meeting leader</option>
+            <optgroup > 
+            <optgroup label="---- Education ----">
+              <option value="Student_sitting2">Student sitting</option>
+              <option value="Professor_teaching2">Professor teaching</option>
+              <option value="Professor_conferencing2">Professor conferencing</option>
+            <optgroup > 
+            <optgroup label="---- Events ----">
+               <option value="Concert_musician_soft_music2">Concert musician (soft music)</option>
+              <option value="Concert_singer_rock2">Concert singer (rock)</option>
+              <option value="Concert_singer2">Concert singer</option>
+              <option value="Concert_spectator_standing2">Concert spectator (standing)</option>
+              <option value="Concert_spectator_sitting2">Concert spectator (sitting)</option>
+              <option value="Museum_visitor2">Museum visitor</option>
+              <option value="Theater_spectator2">Theater spectator</option>
+              <option value="Theater_actor2">Theater actor</option>
+              <option value="Conferencer2">Conferencer</option>
+              <option value="Conference_attendee2">Conference attendee</option>
+            <optgroup > 
+             <optgroup label="---- Restaurant and Bar ----">
+              <option value="Guest_standing2">Guest standing</option>
+              <option value="Guest_sitting2">Guest sitting</option>
+              <option value="Server">Server</option>
+              <option value="Barrista">Barrista</option>
+              <option value="Nightclub_dancing2">Nightclub dancing</option>
+              <option value="Nightclud_sitting2">Nightclud sitting</option>
+            <optgroup > 
+            <optgroup label="---- Stores and retail ----">
+              <option value="Customer_standing2">Customer standing</option>
+              <option value="Cashier_sitting2">Cashier sitting</option>
+              <option value="Vendor_standing2">Vendor standing</option>
+            <optgroup > 
+            <optgroup label="---- Sport ----">
+              <option value="Musculation">Musculation</option>
+              <option value="Floor_gymnastics2">Floor gymnastics</option>
+              <option value="Team_competition2">Team competition</option>
+            <optgroup > 
+            <optgroup label="---- Miscellaneous ----">
+              <option value="Trip_in_elevator2">Trip in elevator</option>
+            <optgroup > 
           </select>
-        </div> #}
+          </select>
+        </div>
         <hr width="80%">
         <div name="two">
           <b>Face masks:</b>
@@ -390,14 +462,14 @@
             <div class='sub_title'>Type of masks used:</div>
             <div class='split'>
               <div>
-                <input type="radio" id="mask_type_11" name="mask_type" value="Type I" checked="checked" onclick="require_fields(this)">
+                <input type="radio" id="mask_type_11" name="mask_type2" value="Type I" checked="checked" onclick="require_fields(this)">
                   <label for="mask_type_11">
                     Surgical/Type I
                     <img class="mask_icons" src="/static/images/masks/t1.png">
                   </label>
               </div>
               <div>
-                <input type="radio" id="mask_type_ffp21"  name="mask_type" value="FFP2" onclick="require_fields(this)">
+                <input type="radio" id="mask_type_ffp21"  name="mask_type2" value="FFP2" onclick="require_fields(this)">
                   <label for="mask_type_ffp21">
                     Respirator/FFP2
                     <img class="mask_icons" src="/static/images/masks/ffp2.png">

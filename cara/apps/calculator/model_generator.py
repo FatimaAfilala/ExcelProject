@@ -11,7 +11,7 @@ from cara import data
 import cara.data.weather
 import cara.monte_carlo as mc
 from .. import calculator
-from cara.monte_carlo.data import activity_distributions, virus_distributions, mask_distributions
+from cara.monte_carlo.data import activity_distributions, activity_distributions2, virus_distributions, mask_distributions, mask_distributions2 
 
 
 LOG = logging.getLogger(__name__)
@@ -29,6 +29,8 @@ _DEFAULT_MC_SAMPLE_SIZE = 50000
 @dataclasses.dataclass
 class FormData:
     activity_type: str
+    role_type: str
+    role_type2: str
     air_changes: float
     air_supply: float
     ceiling_height: float
@@ -55,6 +57,7 @@ class FormData:
     location_latitude: float
     location_longitude: float
     mask_type: str
+    mask_type2: str
     mask_wearing_option: str
     mask_wearing_option2: str
     mechanical_ventilation_type: str
@@ -81,6 +84,8 @@ class FormData:
     #: and the defaults in the html form must not be contradictory.
     _DEFAULTS: typing.ClassVar[typing.Dict[str, typing.Any]] = {
         'activity_type': 'office',
+        'role_type':'',
+        'role_type2':'',
         'air_changes': 0.,
         'air_supply': 0.,
         'calculator_version': _NO_DEFAULT,
@@ -109,6 +114,7 @@ class FormData:
         'location_longitude': _NO_DEFAULT,
         'location_name': _NO_DEFAULT,
         'mask_type': 'Type I',
+        'mask_type2': 'Type I',
         'mask_wearing_option': 'mask_off',
         'mask_wearing_option2': 'mask_off',
         'mechanical_ventilation_type': 'not-applicable',
@@ -196,11 +202,14 @@ class FormData:
                 raise ValueError(
                     f"{start_name} must be less than {end_name}. Got {start} and {end}.")
 
-        validation_tuples = [('activity_type', ACTIVITY_TYPES),    
+        validation_tuples = [('activity_type', ACTIVITY_TYPES), 
+                             ('role_type', ROLE_TYPE),  
+                             ('role_type2', ROLE_TYPE2),   
                              ('exposed_coffee_break_option', COFFEE_OPTIONS_INT), 
                              ('infected_coffee_break_option', COFFEE_OPTIONS_INT),   
                              ('mechanical_ventilation_type', MECHANICAL_VENTILATION_TYPES),
                              ('mask_type', MASK_TYPES),
+                             ('mask_type2', MASK_TYPES2),
                              ('mask_wearing_option', MASK_WEARING_OPTIONS),
                              ('mask_wearing_option2', MASK_WEARING_OPTIONS),
                              ('ventilation_type', VENTILATION_TYPES),
@@ -368,76 +377,154 @@ class FormData:
             mask = models.Mask.types['No mask']
         return mask
 
-    def infected_population(self) -> mc.InfectedPopulation:
-        # Initializes the virus
-        virus = virus_distributions[self.virus_type]
-
-        scenario_activity_and_expiration = {
-            'office': (
-                'Seated',
-                # Mostly silent in the office, but 1/3rd of time talking.
-                {'Talking': 1, 'Breathing': 2}
-            ),
-            'controlroom-day': (
-                'Seated',
-                # Daytime control room shift, 50% talking.
-                {'Talking': 1, 'Breathing': 1}
-            ),
-            'controlroom-night': (
-                'Seated',
-                # Nightshift control room, 10% talking.
-                {'Talking': 1, 'Breathing': 9}
-            ),
-            'meeting': (
-                'Seated',
-                # Conversation of N people is approximately 1/N% of the time talking.
-                {'Talking': 1, 'Breathing': self.total_people - 1}
-            ),
-            'callcentre': ('Seated', 'Talking'),
-            'library': ('Seated', 'Breathing'),
-            'training': ('Standing', 'Talking'),
-            'lab': (
-                'Light activity',
-                #Model 1/2 of time spent talking in a lab.
-                {'Talking': 1, 'Breathing': 1}),
-            'workshop': (
-                'Moderate activity',
-                #Model 1/2 of time spent talking in a workshop.
-                {'Talking': 1, 'Breathing': 1}),
-            'gym':('Heavy exercise', 'Breathing'),
-        }
-
-        [activity_defn, expiration_defn] = scenario_activity_and_expiration[self.activity_type]
-        activity = activity_distributions[activity_defn]
-        expiration = build_expiration(expiration_defn)
-
-        infected_occupants = self.infected_people
-
-        infected = mc.InfectedPopulation(
-            number=infected_occupants,
-            virus=virus,
-            presence=self.infected_present_interval(),
-            mask=self.mask(),
-            activity=activity,
-            expiration=expiration
-        )
-        return infected
+    def mask2(self) -> models.Mask:
+        # Initializes the mask type if mask wearing is "continuous", otherwise instantiates the mask attribute as
+        # the "No mask"-mask
+        if self.mask_wearing_option2 == 'mask_on':
+            mask2 = mask_distributions2[self.mask_type2]
+        else:
+            mask2 = models.Mask.types['No mask']
+        return mask2    
 
     def exposed_population(self) -> mc.Population:
-        scenario_activity = {
-            'office': 'Seated',
-            'controlroom-day': 'Seated',
-            'controlroom-night': 'Seated',
-            'meeting': 'Seated',
-            'callcentre': 'Seated',
-            'library': 'Seated',
-            'training': 'Seated',
-            'workshop': 'Moderate activity',
-            'lab':'Light activity',
-            'gym':'Heavy exercise',
+        scenario_activity_and_expiration = {
+            'Hospital_patient': (
+                'Seated',
+                {'Talking': 0.5, 'Breathing': 9.5}
+            ),
+            'Nurse_working': (
+                'Light activity',
+                {'Talking': 2, 'Breathing': 8}
+            ),
+            'Physician_working': (
+                'Standing',
+                {'Talking': 5, 'Breathing': 5}
+            ),
+            'Office_worker': (
+                'Seated',
+                {'Talking': 2, 'Breathing':8 }
+            ),
+            'Workshop_worker': (
+                'Moderate activity',
+                {'Talking':7, 'Breathing':1.5, 'Shouting':1.5}
+                ),
+            'Meeting_participant': (
+                'Seated', 
+                {'Talking':1.5, 'Breathing':8, 'Shouting': 0.5 }
+                ),
+            'Meeting_leader': (
+                'Standing', 
+                {'Breathing':6,'Talking':3,'Shouting':1}
+                ),
+            'Student_sitting': (
+                'Seated',    
+                {'Talking':0.5 , 'Breathing': 9.5}
+                ),
+            'Professor_teaching': (
+                'Standing',
+                {'Talking': 6, 'Breathing': 2, 'Shouting':2}
+            ),
+            'Professor_conferencing':(
+                'Light activity', 
+                {'Talking':2,'Breathing':2, 'Shouting':6}
+                ),
+            'Concert_musician_soft_music':(
+                'Standing', 
+                {'Talking':0.5,'Breathing':9.5}
+                ),    
+            'Concert_musician_rock':(
+                'Moderate activity', 
+                {'Talking':1,'Breathing':8, 'Shouting':1}
+                ),      
+            'Concert_singer':(
+                'Moderate activity', 
+                {'Talking':1,'Breathing':2, 'Shouting':7}
+                ), 
+            'Concert_spectator_standing':(
+                'Light activity', 
+                {'Talking':1,'Breathing':8, 'Shouting':1}
+                ),      
+            'Concert_spectator_sitting':(
+                'Seated',
+                {'Talking':0.5,'Breathing':9, 'Shouting':0.5}
+                ), 
+            'Museum_visitor':(
+                'Standing',
+                {'Talking':1,'Breathing':9}
+                ),   
+            'Theater_spectator' :(
+                'Seated',
+                {'Talking':0.5,'Breathing':9, 'Shouting':0.5}
+                ),   
+            'Theater_actor' :(
+                'Moderate activity',
+                {'Breathing':7, 'Shouting':3}
+                ),   
+            'Conferencer': (
+                'Light activity',
+                {'Talking':2, 'Breathing':2, 'Shouting':6}
+            ),    
+            'Conference_attendee' : (
+                'Seated',
+                {'Talking':0.5, 'Breathing':9.5}
+            ),    
+            'Guest_standing' : (
+                'Standing',
+                {'Talking':2, 'Breathing':6, 'Shouting':2}
+            ),       
+            'Guest_sitting' : (
+                'Seated',
+                {'Talking':4, 'Breathing':6}
+            ), 
+            'Server' : (
+                'Light activity',
+                {'Talking':2, 'Breathing':8}
+            ),    
+            'Barrista' : (
+                'Standing',
+                {'Talking':2, 'Breathing':6, 'Shouting':2}
+            ),   
+            'Nightclub_dancing' : (
+                'Moderate activity',
+                {'Breathing':9, 'Shouting':1}
+            ),     
+            'Nightclub_sitting' : (
+                'Seated',
+                {'Breathing':8, 'Shouting':2}
+            ),        
+            'Customer_standing' : (
+                'Standing',
+                {'Talking':1,'Breathing':9}
+            ), 
+            'Cashier_sitting' : (
+                'Seated',
+                {'Talking':5,'Breathing':5}
+            ),  
+            'Vendor_standing'  : (
+                'Standing',
+                {'Talking':5,'Breathing':5}
+            ), 
+            'Musculation':(
+                'Heavy exercise',
+                {'Talking':1,'Breathing':9}
+            ),
+            'Floor_gymnastics':(
+                'Moderate activity',
+                {'Talking':1,'Breathing':8, "Shouting":1}
+            ),
+            'Team_competition':(
+                'Heavy exercise',
+                {'Talking':0.5,'Breathing':8, "Shouting":1.5}
+            ),
+            'Trip_in_elevator':(
+                'Standing',
+                {'Talking':1,'Breathing':9}
+            ),
+
         }
 
-        activity_defn = scenario_activity[self.activity_type]
+        
+        [activity_defn, expiration_defn] = scenario_activity_and_expiration[self.role_type]
         activity = activity_distributions[activity_defn]
 
         infected_occupants = self.infected_people
@@ -452,6 +539,166 @@ class FormData:
             mask=self.mask(),
         )
         return exposed
+
+       
+
+    def infected_population(self) -> mc.Population:
+        # Initializes the virus
+        virus = virus_distributions[self.virus_type]
+
+        scenario_activity_and_expiration2 = {
+            'Hospital_patient2': (
+                'Seated',
+                {'Talking': 0.5, 'Breathing': 9.5}
+            ),
+            'Nurse_working2': (
+                'Light activity',
+                {'Talking': 2, 'Breathing': 8}
+            ),
+            'Physician_working2': (
+                'Standing',
+                {'Talking': 5, 'Breathing': 5}
+            ),
+            'Office_worker2': (
+                'Seated',
+                {'Talking': 2, 'Breathing':8 }
+            ),
+            'Workshop_worker2': (
+                'Moderate activity',
+                {'Talking':7, 'Breathing':1.5, 'Shouting':1.5}
+                ),
+            'Meeting_participant2': (
+                'Seated', 
+                {'Talking':1.5, 'Breathing':8, 'Shouting': 0.5 }
+                ),
+            'Meeting_leader2': (
+                'Standing', 
+                {'Breathing':6,'Talking':3,'Shouting':1}
+                ),
+            'Student_sitting2': (
+                'Seated',    
+                {'Talking':0.5 , 'Breathing': 9.5}
+                ),
+            'Professor_teaching2': (
+                'Standing',
+                {'Talking': 6, 'Breathing': 2, 'Shouting':2}
+            ),
+            'Professor_conferencing2':(
+                'Light activity', 
+                {'Talking':2,'Breathing':2, 'Shouting':6}
+                ),
+            'Concert_musician_soft_music2':(
+                'Standing', 
+                {'Talking':0.5,'Breathing':9.5}
+                ),    
+            'Concert_musician_rock2':(
+                'Moderate activity', 
+                {'Talking':1,'Breathing':8, 'Shouting':1}
+                ),      
+            'Concert_singer2':(
+                'Moderate activity', 
+                {'Talking':1,'Breathing':2, 'Shouting':7}
+                ), 
+            'Concert_spectator_standing2':(
+                'Light activity', 
+                {'Talking':1,'Breathing':8, 'Shouting':1}
+                ),      
+            'Concert_spectator_sitting2':(
+                'Seated',
+                {'Talking':0.5,'Breathing':9, 'Shouting':0.5}
+                ), 
+            'Museum_visitor2':(
+                'Standing',
+                {'Talking':1,'Breathing':9}
+                ),   
+            'Theater_spectator2' :(
+                'Seated',
+                {'Talking':0.5,'Breathing':9, 'Shouting':0.5}
+                ),   
+            'Theater_actor2' :(
+                'Moderate activity',
+                {'Breathing':7, 'Shouting':3}
+                ),   
+            'Conferencer2': (
+                'Light activity',
+                {'Talking':2, 'Breathing':2, 'Shouting':6}
+            ),    
+            'Conference_attendee1' : (
+                'Seated',
+                {'Talking':0.5, 'Breathing':9.5}
+            ),    
+            'Guest_standing2' : (
+                'Standing',
+                {'Talking':2, 'Breathing':6, 'Shouting':2}
+            ),       
+            'Guest_sitting2' : (
+                'Seated',
+                {'Talking':4, 'Breathing':6}
+            ), 
+            'Server2' : (
+                'Light activity',
+                {'Talking':2, 'Breathing':8}
+            ),    
+            'Barrista2' : (
+                'Standing',
+                {'Talking':2, 'Breathing':6, 'Shouting':2}
+            ),   
+            'Nightclub_dancing2' : (
+                'Moderate activity',
+                {'Breathing':9, 'Shouting':1}
+            ),     
+            'Nightclub_sitting2' : (
+                'Seated',
+                {'Breathing':8, 'Shouting':2}
+            ),        
+            'Customer_standing2' : (
+                'Standing',
+                {'Talking':1,'Breathing':9}
+            ), 
+            'Cashier_sitting2' : (
+                'Seated',
+                {'Talking':5,'Breathing':5}
+            ),  
+            'Vendor_standing2'  : (
+                'Standing',
+                {'Talking':5,'Breathing':5}
+            ), 
+            'Musculation2':(
+                'Heavy exercise',
+                {'Talking':1,'Breathing':9}
+            ),
+            'Floor_gymnastics2':(
+                'Moderate activity',
+                {'Talking':1,'Breathing':8, "Shouting":1}
+            ),
+            'Team_competition2':(
+                'Heavy exercise',
+                {'Talking':0.5,'Breathing':8, "Shouting":1.5}
+            ),
+            'Trip_in_elevator2':(
+                'Standing',
+                {'Talking':1,'Breathing':9}
+            ),
+
+        }
+
+        [activity_defn2, expiration_defn2] = scenario_activity_and_expiration2[self.role_type2]
+        activity2 = activity_distributions2[activity_defn2]
+
+        expiration2 = build_expiration(expiration_defn2)
+
+        infected_occupants = self.infected_people
+
+        infected = mc.InfectedPopulation(
+            number=infected_occupants,
+            virus=virus,
+            presence=self.infected_present_interval(),
+            mask=self.mask2(),
+            activity=activity2,
+            expiration=expiration2
+        )
+        return infected
+
 
     def _compute_breaks_in_interval(self, start, finish, n_breaks, duration) -> models.BoundarySequence_t:
         break_delay = ((finish - start) - (n_breaks * duration)) // (n_breaks+1)
@@ -643,6 +890,8 @@ def baseline_raw_form_data():
     # Note: This isn't a special "baseline". It can be updated as required.
     return {
         'activity_type': 'office',
+        'role_type':'',
+        'role_type2':'',
         'air_changes': '',
         'air_supply': '',
         'ceiling_height': '',
@@ -669,6 +918,7 @@ def baseline_raw_form_data():
         'location_longitude': 6.14275,
         'location_name': 'Geneva',
         'mask_type': 'Type I',
+        'mask_type2': 'Type I',
         'mask_wearing_option': 'mask_off',
         'mask_wearing_option2': 'mask_off',
         'mechanical_ventilation_type': '',
@@ -694,9 +944,19 @@ def baseline_raw_form_data():
 
 
 ACTIVITY_TYPES = {'office', 'meeting', 'training', 'callcentre', 'controlroom-day', 'controlroom-night', 'library', 'workshop', 'lab', 'gym'}
+ROLE_TYPE ={'Hospital_patient', 'Nurse_working', 'Physician_working', 'Office_worker', 'Workshop_worker', 'Meeting_participant', 'Meeting_leader', 'Student_sitting', 'Professor_teaching', 'Professor_conferencing', 'Concert_musician_soft_music','Concert_musician_rock', 'Concert_singer', 
+        'Concert_spectator_standing', 'Concert_spectator_sitting', 'Museum_visitor', 'Theater_spectator', 'Theater_actor', 'Conferencer', 'Conference_attendee', 'Guest_standing', 'Guest_sitting', 'Server', 'Barrista', 'Nightclub_dancing', 'Nightclub_sitting', 
+        'Customer_standing', 'Cashier_sitting', 'Vendor_standing', 'Musculation', 'Floor_gymnastics', 'Team_competition', 'Trip_in_elevator'}
+
+ROLE_TYPE2 ={'Hospital_patient2', 'Nurse_working2', 'Physician_working2', 'Office_worker2', 'Workshop_worker2', 'Meeting_participant2', 'Meeting_leader2', 'Student_sitting2', 'Professor_teaching2', 'Professor_conferencing2', 'Concert_musician_soft_music2','Concert_musician_rock2', 'Concert_singer2', 
+        'Concert_spectator_standing2', 'Concert_spectator_sitting2', 'Museum_visitor2', 'Theater_spectator2', 'Theater_actor2', 'Conferencer2', 'Conference_attendee2', 'Guest_standing2', 'Guest_sitting2', 'Server2', 'Barrista2', 'Nightclub_dancing2', 'Nightclub_sitting2', 
+        'Customer_standing2', 'Cashier_sitting2', 'Vendor_standing2', 'Musculation2', 'Floor_gymnastics2', 'Team_competition2', 'Trip_in_elevator2'}
+
 MECHANICAL_VENTILATION_TYPES = {'mech_type_air_changes', 'mech_type_air_supply', 'not-applicable'}
 MASK_TYPES = {'Type I', 'FFP2'}
+MASK_TYPES2 = {'Type I', 'FFP2'}
 MASK_WEARING_OPTIONS = {'mask_on', 'mask_off'}
+MASK_WEARING_OPTIONS2 = {'mask_on', 'mask_off'}
 VENTILATION_TYPES = {'natural_ventilation', 'mechanical_ventilation', 'no_ventilation'}
 VIRUS_TYPES = {'SARS_CoV_2', 'SARS_CoV_2_B117', 'SARS_CoV_2_B1351','SARS_CoV_2_P1', 'SARS_CoV_2_B16172', 'SARS_CoV_2_B11529'}
 VOLUME_TYPES = {'room_volume_explicit', 'room_volume_from_dimensions'}
