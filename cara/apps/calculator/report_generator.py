@@ -8,6 +8,9 @@ import typing
 import urllib
 import zlib
 
+import json
+import os
+
 import jinja2
 import numpy as np
 
@@ -113,6 +116,7 @@ def calculate_report_data(model: models.ExposureModel):
         for time1, time2 in zip(times[:-1], times[1:])
     ])
 
+    #setups the variables useable in the j2 template
     return {
         "times": list(times),
         "exposed_presence_intervals": [list(interval) for interval in model.exposed.presence.boundaries()],
@@ -196,8 +200,14 @@ def non_zero_percentage(percentage: int) -> str:
 
 def manufacture_alternative_scenarios(form: FormData) -> typing.Dict[str, mc.ExposureModel]:
     scenarios = {}
+    # sans BV avec mask
+    # sans BV sans mask
+    # avec BV sans mask
+    # si on coche rien, on fait les 4 scénar
+
 
     # Two special option cases - HEPA and/or FFP2 masks.
+    """
     FFP2_being_worn = bool(form.mask_wearing_option == 'mask_on' and form.mask_type == 'FFP2')
     if FFP2_being_worn and form.hepa_option:
         FFP2andHEPAalternative = dataclass_utils.replace(form, mask_type='Type I')
@@ -207,9 +217,46 @@ def manufacture_alternative_scenarios(form: FormData) -> typing.Dict[str, mc.Exp
         noHEPAalternative = dataclass_utils.replace(noHEPAalternative, mask_wearing_option = 'mask_on')
         noHEPAalternative = dataclass_utils.replace(noHEPAalternative, hepa_option=False)
         scenarios['Base scenario without HEPA filter, with FFP2 masks'] = noHEPAalternative.build_mc_model()
-
+    """
     # The remaining scenarios are based on Type I masks (possibly not worn)
     # and no HEPA filtration.
+
+    print("manufacture scenarios")
+    #print(form)
+    scenarios_alt = form.scenarios_alt
+    print(scenarios_alt)
+    if scenarios_alt=="":
+        scenarios_alt="1;2;3"
+    if scenarios_alt!="":
+        scenarios_id=scenarios_alt.split(";")
+        if "1" in scenarios_id:
+            #Sans BV, personne ne porte de masque
+
+            nobv_nomask = dataclass_utils.replace(form, mask_wearing_option='mask_off')
+            nobv_nomask = dataclass_utils.replace(nobv_nomask, mask_wearing_option2='mask_off')
+            if form.uv_device!="None":
+                nobv_nomask = dataclass_utils.replace(nobv_nomask, uv_device="None")
+            scenarios["no BV, no mask"]=nobv_nomask.build_mc_model()
+        if "2" in scenarios_id:
+            #Sans BV, tout le monde porte un masque du type de l'infecté ? de la population saine ?
+            nobv_mask = dataclass_utils.replace(form, mask_wearing_option='mask_on')
+            nobv_mask = dataclass_utils.replace(nobv_mask, mask_wearing_option2='mask_on')
+            if form.uv_device!="None":
+                nobv_mask = dataclass_utils.replace(nobv_mask, uv_device="None")
+            scenarios["no BV, all wearing mask " + form.mask_type]=nobv_mask.build_mc_model()
+            #Pas besoin de changer le type de masque porté, l'option est remplie par l'utilisateur / par défaut mask type I
+              
+        if "3" in scenarios_id:
+            #Avec BV, personne ne porte de masque
+            bv_nomask = dataclass_utils.replace(form, mask_wearing_option='mask_off')
+            bv_nomask = dataclass_utils.replace(bv_nomask, mask_wearing_option2='mask_off')
+            if form.uv_device=="None":
+                bv_nomask = dataclass_utils.replace(bv_nomask, uv_device="BR1000")
+                bv_nomask = dataclass_utils.replace(bv_nomask, uv_speed=1200)
+            scenarios["BR1000 with 1200m^3/h, no mask"]=bv_nomask.build_mc_model()
+            
+    
+    """
     form = dataclass_utils.replace(form, mask_type='Type I')
     if form.hepa_option:
         form = dataclass_utils.replace(form, hepa_option=False)
@@ -228,9 +275,10 @@ def manufacture_alternative_scenarios(form: FormData) -> typing.Dict[str, mc.Exp
     # No matter the ventilation scheme, we include scenarios which don't have any ventilation.
     with_mask_no_vent = dataclass_utils.replace(with_mask, ventilation_type='no_ventilation')
     without_mask_or_vent = dataclass_utils.replace(without_mask, ventilation_type='no_ventilation')
+
     scenarios['No ventilation with Type I masks'] = with_mask_no_vent.build_mc_model()
     scenarios['Neither ventilation nor masks'] = without_mask_or_vent.build_mc_model()
-
+    """
     return scenarios
 
 
@@ -291,7 +339,7 @@ class ReportGenerator:
     ) -> dict:
         now = datetime.utcnow().astimezone()
         time = now.strftime("%Y-%m-%d %H:%M:%S UTC")
-
+        
         context = {
             'model': model,
             'form': form,
@@ -307,6 +355,8 @@ class ReportGenerator:
         )
         context['permalink'] = generate_permalink(base_url, self.calculator_prefix, form)
         context['calculator_prefix'] = self.calculator_prefix
+
+        # For further information about these values visit https://gitlab.cern.ch/cara/cara/-/merge_requests/321.
         context['scale_warning'] = {
             'level': 'orange-3',
             'incidence_rate': 'somewhere in between 25 and 100 new cases per 100 000 inhabitants',
