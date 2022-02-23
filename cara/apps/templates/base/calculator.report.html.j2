@@ -12,6 +12,33 @@
 	<script src="https://d3js.org/d3.v7.min.js"></script>
 	<script src="{{ calculator_prefix }}/static/js/report.js" type="application/javascript"></script>
 
+	<script>
+		function myalert() {
+  		  var email = prompt("Please enter your email ");
+				
+			if (email != null) {
+				sendMail();
+			}
+	
+		}
+		
+	</script>
+
+	<script>
+	function sendMail() {
+
+     var link = "mailto:afilal.fatima12@gmail.com"
+             + "?cc=myCCaddress@example.com"
+             + "&subject=" + encodeURIComponent("This is my subject");
+			 + Body: document.getElementById('body').value
+    window.location.href = link; 
+
+
+
+}
+	
+	</script>
+
 </head>
 
 <body id="body">
@@ -24,7 +51,9 @@
 			<h2 class="header_text mb-0">REPORT</h1>
 			<p class="mb-0" id="report_version"> Created {{ creation_date }} using CARA calculator version v{{ form.calculator_version }}</p>
 		</div>
-		<button type="button" class="btn btn-outline-dark align-self-center" id="download-pdf" style="margin-right: -100pt" onclick="print()">Print Report</button>
+		<button type="button" class="btn btn-outline-dark align-self-center" id="download-pdf" style="margin-right: -100pt" onclick="myalert(); ">Send Report</button>
+		
+
 		<a href="{{ permalink.link }}" style="float: left;" id="pdf_qrcode_aref" class="align-self-center invisible mr-0"><div id="pdf_qrcode"></div></a>
 	</div>
 
@@ -297,7 +326,7 @@
 							{% elif form.role_type == "Nurse_working" %}
 							Nurse working
 							{% elif form.role_type == "Physician_working" %}
-							Physician_working
+							Physician working
 							{% elif form.role_type == "Office_worker" %}
 							Office worker
 							{% elif form.role_type == "Workshop_worker"%}
