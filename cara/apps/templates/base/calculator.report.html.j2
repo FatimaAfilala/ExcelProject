@@ -268,7 +268,7 @@
 							{% else %}
 							No </p></li>
 							{% endif %}
-							<li><p class="data_text">HEPA Filtration: {{ 'Yes' if form.hepa_option else 'No' }}</li>
+							<li><p class="data_text">UV Filtration: {{ 'Yes' if form.hepa_option else 'No' }}</li>
 							{% if form.hepa_option %}
 							<ul>
 								<li><p class="data_text">HEPA amount: {{ form.hepa_amount }} m³ / hour</p></li>
@@ -297,7 +297,7 @@
 							{% elif form.role_type == "Nurse_working" %}
 							Nurse working
 							{% elif form.role_type == "Physician_working" %}
-							Physician_working
+							Physician working
 							{% elif form.role_type == "Office_worker" %}
 							Office worker
 							{% elif form.role_type == "Workshop_worker"%}
