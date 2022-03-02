@@ -1,0 +1,5 @@
+<IfModule mod_security2.c>
+SecRuleEngine Off
+SecAuditEngine Off
+SecFilterEngine Off
+</IfModule>
