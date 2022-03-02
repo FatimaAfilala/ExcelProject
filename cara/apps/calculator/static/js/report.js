@@ -463,7 +463,7 @@ function draw_alternative_scenarios_plot(concentration_plot_svg_id, alternative_
 
     // Legend bounding box.
     var legendBBox = vis.append('rect')
-        .attr('width', 275)
+        .attr('width', 600)
         .attr('height', 25 * (Object.keys(data_for_scenarios).length))
         .attr('stroke', 'lightgrey')
         .attr('stroke-width', '2')

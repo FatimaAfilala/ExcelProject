@@ -77,7 +77,14 @@ class FormData:
     scenario_3: str
     total_people: int
     uv_device: str
-    uv_speed: int
+    uv_number_1: int
+    uv_number_2: int
+    uv_number_3: int
+    uv_number_4: int
+    uv_speed_1: int
+    uv_speed_2: int
+    uv_speed_3: int
+    uv_speed_4: int
     ventilation_type: str
     virus_type: str
     volume_type: str
@@ -138,7 +145,14 @@ class FormData:
         'scenario_3': '',
         'total_people': _NO_DEFAULT,
         'uv_device': "BR500",
-        'uv_speed': 400,
+        'uv_number_1': 0,
+        'uv_number_2': 0,
+        'uv_number_3': 0,
+        'uv_number_4': 0,
+        'uv_speed_1': 400,
+        'uv_speed_2': 800,
+        'uv_speed_3': 2500,
+        'uv_speed_4': 4000,
         'ventilation_type': 'no_ventilation',
         'virus_type': 'SARS_CoV_2',
         'volume_type': _NO_DEFAULT,
@@ -374,6 +388,20 @@ class FormData:
         accepted_devices = ["BR500","BR1000","BR5000","BR10000"]
         accepted_viruses = ["SarS-CoV-2"]
         if self.uv_device in accepted_devices:
+
+            if self.uv_device=="BR500":
+                speed=self.uv_speed_1
+                number=self.uv_number_1
+            elif self.uv_device=="BR1000":
+                speed=self.uv_speed_2
+                number=self.uv_number_2
+            elif self.uv_device=="BR5000":
+                speed=self.uv_speed_3
+                number=self.uv_number_3
+            else:
+                speed=self.uv_speed_4
+                number=self.uv_number_4
+
             with open(os.getcwd()+'\\cara\\config_BR.json') as json_file:
                 data = json.load(json_file)
                 Q2 = data[self.uv_device]["Q2"]
@@ -384,7 +412,7 @@ class FormData:
                     D90 = data[self.virus_type]
                 else:
                     D90 = data["SarS-CoV-2"]
-            uv= models.UVFilter(active=always_on, device=self.uv_device, speed=self.uv_speed,q2 = Q2, dose_q2=doseQ2, d90 = D90)
+            uv= models.UVFilter(active=always_on, device=self.uv_device, number=number, speed=speed,q2 = Q2, dose_q2=doseQ2, d90 = D90)
             return models.MultipleVentilation((ventilation, uv, infiltration_ventilation))
         #elif self.hepa_option:
             hepa = models.HEPAFilter(active=always_on, q_air_mech=self.hepa_amount)
@@ -966,7 +994,14 @@ def baseline_raw_form_data():
         'total_people': '10',
         'uv_option': False,
         'uv_device': "BR500",
-        'uv_speed': 400,
+        'uv_number_1': 0,
+        'uv_number_2': 0,
+        'uv_number_3': 0,
+        'uv_number_4': 0,
+        'uv_speed_1': 400,
+        'uv_speed_2': 800,
+        'uv_speed_3': 2500,
+        'uv_speed_4': 4000,
         'ventilation_type': 'natural_ventilation',
         'virus_type': 'SARS_CoV_2',
         'volume_type': 'room_volume_explicit',
