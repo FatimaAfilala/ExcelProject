@@ -270,6 +270,7 @@
 							{% endif %}
 							<li><p class="data_text">UV Filtration: Yes - scenario {{ '1 & 4' if form.uv_device!="None" else '4' }} / No - scenario {{ '2 & 3' if form.uv_device!="None" else '1, 2 & 3' }} </li>
 							{% if form.uv_device!="None" %}
+
 							<ul>
 								<li><p class="data_text">Device (scenario 1) : {{ form.uv_device }}</p></li>
 								{% if form.uv_device=="BR500"%}
@@ -310,7 +311,7 @@
 							{% elif form.role_type == "Nurse_working" %}
 							Nurse working
 							{% elif form.role_type == "Physician_working" %}
-							Physician_working
+							Physician working
 							{% elif form.role_type == "Office_worker" %}
 							Office worker
 							{% elif form.role_type == "Workshop_worker"%}
