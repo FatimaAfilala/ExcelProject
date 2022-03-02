@@ -268,10 +268,24 @@
 							{% else %}
 							No </p></li>
 							{% endif %}
-							<li><p class="data_text">UV Filtration: {{ 'Yes' if form.hepa_option else 'No' }}</li>
-							{% if form.hepa_option %}
+							<li><p class="data_text">UV Filtration: Yes - scenario {{ '1 & 4' if form.uv_device!="None" else '4' }} / No - scenario {{ '2 & 3' if form.uv_device!="None" else '1, 2 & 3' }} </li>
+							{% if form.uv_device!="None" %}
+
 							<ul>
-								<li><p class="data_text">HEPA amount: {{ form.hepa_amount }} m³ / hour</p></li>
+								<li><p class="data_text">Device (scenario 1) : {{ form.uv_device }}</p></li>
+								{% if form.uv_device=="BR500"%}
+									<li><p class="data_text">Number of devices : {{ form.uv_number_1 }}</p></li>
+									<li><p class="data_text">Speed used : {{ form.uv_speed_1 }} m³ / hour</p></li>
+								{% elif form.uv_device=="BR1000"%}
+									<li><p class="data_text">Number of devices : {{ form.uv_number_2 }}</p></li>
+									<li><p class="data_text">Speed used : {{ form.uv_speed_2 }} m³ / hour</p></li>
+								{% elif form.uv_device=="BR5000"%}
+									<li><p class="data_text">Number of devices : {{ form.uv_number_3 }}</p></li>
+									<li><p class="data_text">Speed used : {{ form.uv_speed_3 }} m³ / hour</p></li>
+								{% else%}
+									<li><p class="data_text">Number of devices : {{ form.uv_number_4 }}</p></li>
+									<li><p class="data_text">Speed used : {{ form.uv_speed_4 }} m³ / hour</p></li>
+								{%endif%}
 							</ul>
 							{% endif %}
 						</ul>
@@ -363,10 +377,7 @@
 							</p></li>
 							<li><p class="data_text">Mask wearing for exposed occupant(s):</p></li>
 									<ul>
-										<li><p class="data_text">Masks worn at workstations? {{ 'Yes' if form.mask_wearing_option == "mask_on" else 'No' }} </p></li>
-										{% if form.mask_wearing_option == "mask_on" %}
-										<li><p class="data_text">Mask type: {{ form.mask_type }}</p></li>
-										{% endif %}
+										<li><p class="data_text">Masks worn at workstations : {{ form.mask_type + ' - scenario 1 & 3 / None - scenario 2 & 4' if form.mask_wearing_option == "mask_on" else 'None - scenario 1,2,3 & 4' }}  </p></li>
 									</ul>
 							<br>
 							<li><p class="data_text">Infected occupant(s) activity time:</p></li>
@@ -446,10 +457,7 @@
 							{% endif %}
 							<li><p class="data_text">Mask wearing for infected occupant(s):</p></li>
 									<ul>
-										<li><p class="data_text">Masks worn at workstations? {{ 'Yes' if form.mask_wearing_option2 == "mask_on" else 'No' }} </p></li>
-										{% if form.mask_wearing_option2 == "mask_on" %}
-										<li><p class="data_text">Mask type: {{ form.mask_type2 }}</p></li>
-										{% endif %}
+										<li><p class="data_text">Masks worn at workstations : {{ form.mask_type2 + ' - scenario 1 & 3 / None - scenario 2 & 4' if form.mask_wearing_option2 == "mask_on" else 'None - scenario 1,2,3 & 4' }}
 									</ul>
 
 							<li><p class="data_text">Event for the month of {{ form.event_month }}</p></li>

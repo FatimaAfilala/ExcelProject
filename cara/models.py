@@ -410,22 +410,21 @@ class UVFilter(Ventilation):
     # in J/m^2
     d90: _VectorisedFloat
 
+    number: _VectorisedFloat
+
     def air_exchange(self, room: Room, time: float) -> _VectorisedFloat:
         # If the filter is off, no air is being exchanged.
         
         if not self.active.triggered(time):
             return 0.
         # Reminder, no dependence on time in the resulting calculation.
-        abattement = ((self.speed*self.dose_q2)/self.q2)/self.d90
-        print("speed*doseq2")
-        print(self.speed*self.dose_q2)
-        print("q2")
-        print(self.q2)
-        print("d90")
-        print(self.d90)
+        ds = (self.q2*self.dose_q2)/self.speed
+        abattement = 1-10**((-ds)/self.d90)
+        print("ds")
+        print(ds)
         print("abattement")
         print(abattement)
-        return (self.speed*abattement) / room.volume    
+        return (self.number*self.speed*abattement) / room.volume    
 
 
 @dataclass(frozen=True)

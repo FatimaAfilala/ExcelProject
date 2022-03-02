@@ -267,7 +267,7 @@
     <div class="form-group row">
     <div class="col-sm-4"><label class="col-form-label">Disinfection device:</label></div>
     <div class="col-sm-6">
-      <select id="uv_device" name="uv_device" class="form-control">
+      <select id="uv_device" name="uv_device" class="form-control disinfection">
         <option value="None" selected>None</option>
         <option value="BR500">BR500</option>
         <option value="BR1000">BR1000</option>
@@ -277,10 +277,16 @@
     </div>
     </div>
 
+    <div id="DIVuv_speed_1" style="display:none">
     <div class="form-group row">
-    <div class="col-sm-4"><label class="col-form-label">Speed of the device:</label></div>
+      <div class="col-sm-4"><label class="col-form-label">Number of devices: </label></div>
+      <div class="col-sm-6 align-self-center"><input type="number" id="uv_number_1" class="form-control" name="uv_number_1" min=0 value=1></div>
+    </div>
+
+    <div class="form-group row">
+    <div class="col-sm-4"><label class="col-form-label">Speed of the BR500 device(s):</label></div>
     <div class="col-sm-6">
-      <select id="uv_speed" name="uv_speed" class="form-control">
+      <select id="uv_speed_1" name="uv_speed_1" class="form-control">
         <option value="400">400 m^3/h</option>
         <option value="500">500 m^3/h</option>
         <option value="600">600 m^3/h</option>
@@ -288,8 +294,83 @@
       </select>
     </div>
     </div>
-    
+    </div>
 
+    <div id="DIVuv_speed_2" style="display:none">
+    <div class="form-group row">
+      <div class="col-sm-4"><label class="col-form-label">Number of devices: </label></div>
+      <div class="col-sm-6 align-self-center"><input type="number" id="uv_number_2" class="form-control" name="uv_number_2" min=0 value=1></div>
+    </div>
+
+    <div class="form-group row">
+    <div class="col-sm-4"><label class="col-form-label">Speed of the BR1000 device(s):</label></div>
+    <div class="col-sm-6">
+      <select id="uv_speed_2" name="uv_speed_2" class="form-control">
+        <option value="800">800 m^3/h</option>
+        <option value="1000">1000 m^3/h</option>
+        <option value="1200">1200 m^3/h</option>
+        <option value="2800">2800 m^3/h</option>
+      </select>
+    </div>
+    </div>
+    </div>
+
+    <div id="DIVuv_speed_3" style="display:none">
+    <div class="form-group row">
+      <div class="col-sm-4"><label class="col-form-label">Number of devices: </label></div>
+      <div class="col-sm-6 align-self-center"><input type="number" id="uv_number_3" class="form-control" name="uv_number_3" min=0 value=1></div>
+    </div>
+    <div class="form-group row">
+    <div class="col-sm-4"><label class="col-form-label">Speed of the BR5000 device(s):</label></div>
+    <div class="col-sm-6">
+      <select id="uv_speed_3" name="uv_speed_3" class="form-control">
+        <option value="2500">2500 m^3/h</option>
+        <option value="4000">4000 m^3/h</option>
+        <option value="5000">5000 m^3/h</option>
+        <option value="6000">6000 m^3/h</option>
+      </select>
+    </div>
+    </div>
+    </div>
+    <div id="DIVuv_speed_4" style="display:none">
+    <div class="form-group row">
+      <div class="col-sm-4"><label class="col-form-label">Number of devices: </label></div>
+      <div class="col-sm-6 align-self-center"><input type="number" id="uv_number_4" class="form-control" name="uv_number_4" min=0 value=1></div>
+    </div>
+    <div class="form-group row">
+    <div class="col-sm-4"><label class="col-form-label">Speed of the BR10000 device(s):</label></div>
+    <div class="col-sm-6">
+      <select id="uv_speed_4" name="uv_speed_4" class="form-control">
+        <option value="4000">4000 m^3/h</option>
+        <option value="7000">7000 m^3/h</option>
+        <option value="10000">10000 m^3/h</option>
+        <option value="11000">11000 m^3/h</option>
+      </select>
+    </div>
+    </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script>
+      //handle checkbox behaviour
+          $(".disinfection").change(function(event) {
+            var device = event.target.value
+            console.log(device)
+            var number
+            if (device=="BR500") number = 1
+            else if (device=="BR1000") number = 2
+            else if (device=="BR5000") number = 3
+            else if (device=="BR10000") number = 4
+
+            for (var i=1;i<=4;i++) {
+              console.log("DIVuv_speed_" + i.toString())
+              document.getElementById("DIVuv_speed_" + i.toString()).style.display = "none"
+            }
+            var show_container = document.getElementById("DIVuv_speed_" + number.toString() )
+            show_container.style.display = ""
+            console.log(show_container)
+          })
+    </script>
   </div>
   <div>
 
@@ -667,7 +748,7 @@
 
         <div class="form-check">
           <input type="checkbox" id="scenario_2" class="tabbed form-check-input scenario-id" name="scenario_2" checked="true" value='2'>
-          <label for="scenario_2" class="form-check-label col-sm-12">Sans BV, tout le monde porte un masque</label>
+          <label for="scenario_2" class="form-check-label col-sm-12">Sans BV, scénario identique par ailleurs</label>
           <input type="checkbox" id="scenario_1" class="tabbed form-check-input scenario-id" name="scenario_1" checked="true" value='1'>
           <label for="scenario_1" class="form-check-label col-sm-12">Sans BV, personne ne porte de masque</label>
           <input type="checkbox" id="scenario_3" class="tabbed form-check-input scenario-id" name="scenario_3" checked="true" value='3'>
@@ -676,7 +757,7 @@
           <input value="1;2;3" class="scenario-ids" name="scenarios_alt" type="hidden">
         </div><br>        
 
-        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        
         <script>
         //handle checkbox behaviour
           $(".scenario-id").change(function(event) {
