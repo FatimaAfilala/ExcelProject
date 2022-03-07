@@ -28,7 +28,7 @@ _DEFAULT_MC_SAMPLE_SIZE = 50000
 
 @dataclasses.dataclass
 class FormData:
-    activity_type: str
+    # activity_type: str
     role_type: str
     role_type2: str
     air_changes: float
@@ -83,9 +83,9 @@ class FormData:
     #: The default values for undefined fields. Note that the defaults here
     #: and the defaults in the html form must not be contradictory.
     _DEFAULTS: typing.ClassVar[typing.Dict[str, typing.Any]] = {
-        'activity_type': 'office',
+        # 'activity_type': 'office',
         'role_type':'Hospital_patient',
-        'role_type2':'Hosîtal_patient2',
+        'role_type2':'Hospital_patient2',
         'air_changes': 0.,
         'air_supply': 0.,
         'calculator_version': _NO_DEFAULT,
@@ -202,7 +202,8 @@ class FormData:
                 raise ValueError(
                     f"{start_name} must be less than {end_name}. Got {start} and {end}.")
 
-        validation_tuples = [('activity_type', ACTIVITY_TYPES), 
+        validation_tuples = [
+                            #  ('activity_type', ACTIVITY_TYPES), 
                              ('role_type', ROLE_TYPE),  
                              ('role_type2', ROLE_TYPE2),   
                              ('exposed_coffee_break_option', COFFEE_OPTIONS_INT), 
@@ -388,6 +389,10 @@ class FormData:
 
     def exposed_population(self) -> mc.Population:
         scenario_activity_and_expiration = {
+            'Office': (
+                'Seated',
+                {'Talking': 3.5, 'Breathing': 6.6}
+            ),
             'Hospital_patient': (
                 'Seated',
                 {'Talking': 0.5, 'Breathing': 9.5}
@@ -547,6 +552,10 @@ class FormData:
         virus = virus_distributions[self.virus_type]
 
         scenario_activity_and_expiration2 = {
+              'Office2': (
+                'Seated',
+                {'Talking': 3.5, 'Breathing': 6.6}
+            ),
             'Hospital_patient2': (
                 'Seated',
                 {'Talking': 0.5, 'Breathing': 9.5}
@@ -889,7 +898,7 @@ def build_expiration(expiration_definition) -> models._ExpirationBase:
 def baseline_raw_form_data():
     # Note: This isn't a special "baseline". It can be updated as required.
     return {
-        'activity_type': 'office',
+        # 'activity_type': 'office',
         'role_type':'',
         'role_type2':'',
         'air_changes': '',
@@ -943,12 +952,12 @@ def baseline_raw_form_data():
     }
 
 
-ACTIVITY_TYPES = {'office', 'meeting', 'training', 'callcentre', 'controlroom-day', 'controlroom-night', 'library', 'workshop', 'lab', 'gym'}
-ROLE_TYPE ={'Hospital_patient', 'Nurse_working', 'Physician_working', 'Office_worker', 'Workshop_worker', 'Meeting_participant', 'Meeting_leader', 'Student_sitting', 'Professor_teaching', 'Professor_conferencing', 'Concert_musician_soft_music','Concert_musician_rock', 'Concert_singer', 
+# ACTIVITY_TYPES = {'office', 'meeting', 'training', 'callcentre', 'controlroom-day', 'controlroom-night', 'library', 'workshop', 'lab', 'gym'}
+ROLE_TYPE ={'Office','Hospital_patient', 'Nurse_working', 'Physician_working', 'Office_worker', 'Workshop_worker', 'Meeting_participant', 'Meeting_leader', 'Student_sitting', 'Professor_teaching', 'Professor_conferencing', 'Concert_musician_soft_music','Concert_musician_rock', 'Concert_singer', 
         'Concert_spectator_standing', 'Concert_spectator_sitting', 'Museum_visitor', 'Theater_spectator', 'Theater_actor', 'Conferencer', 'Conference_attendee', 'Guest_standing', 'Guest_sitting', 'Server', 'Barrista', 'Nightclub_dancing', 'Nightclub_sitting', 
         'Customer_standing', 'Cashier_sitting', 'Vendor_standing', 'Musculation', 'Floor_gymnastics', 'Team_competition', 'Trip_in_elevator'}
 
-ROLE_TYPE2 ={'Hospital_patient2', 'Nurse_working2', 'Physician_working2', 'Office_worker2', 'Workshop_worker2', 'Meeting_participant2', 'Meeting_leader2', 'Student_sitting2', 'Professor_teaching2', 'Professor_conferencing2', 'Concert_musician_soft_music2','Concert_musician_rock2', 'Concert_singer2', 
+ROLE_TYPE2 ={'Office2','Hospital_patient2', 'Nurse_working2', 'Physician_working2', 'Office_worker2', 'Workshop_worker2', 'Meeting_participant2', 'Meeting_leader2', 'Student_sitting2', 'Professor_teaching2', 'Professor_conferencing2', 'Concert_musician_soft_music2','Concert_musician_rock2', 'Concert_singer2', 
         'Concert_spectator_standing2', 'Concert_spectator_sitting2', 'Museum_visitor2', 'Theater_spectator2', 'Theater_actor2', 'Conferencer2', 'Conference_attendee2', 'Guest_standing2', 'Guest_sitting2', 'Server2', 'Barrista2', 'Nightclub_dancing2', 'Nightclub_sitting2', 
         'Customer_standing2', 'Cashier_sitting2', 'Vendor_standing2', 'Musculation2', 'Floor_gymnastics2', 'Team_competition2', 'Trip_in_elevator2'}
 

@@ -217,10 +217,10 @@ function setMaxInfectedPeople() {
   $("#training_limit_error").hide();
   var max = $("#total_people").val()
 
-  if ($("#activity_type").val() === "training") {
-    max = 1;
-    $("#training_limit_error").show();
-  }
+  // if ($("#activity_type").val() === "training") {
+  //   max = 1;
+  //   $("#training_limit_error").show();
+  // }
   
 
   $("#infected_people").attr("max", max);
@@ -614,7 +614,7 @@ $(document).ready(function () {
   // and update it when total people is changed.
   setMaxInfectedPeople();
   $("#total_people").change(setMaxInfectedPeople);
-  $("#activity_type").change(setMaxInfectedPeople);
+  // $("#activity_type").change(setMaxInfectedPeople);
 
   //Validate all non zero values
   $("input[required].non_zero").each(function() {validateValue(this)});

@@ -19,12 +19,12 @@
 {% block main %}
 
 <span class="cara_version">v{{ calculator_version }}</span>
-<span class="feedback">Please send feedback to <a href="mailto:CARA-dev@cern.ch">CARA-dev@cern.ch</a></span>
+<span class="feedback">Please send feedback to <a href="mailto:Flow-R-dev@ingenica.fr">Flow-R-dev@ingenica.fr</a></span>
 <header class= "bg-light">
   <div class="container container--padding">
     <div class="d-flex header-height">
       <h1 class="align-self-center">Calculator</h1>
-      <img src="/static/images/cara_logo.200x200.png" class="logo_form align-self-center ml-3">
+      {# <img src="/static/images/cara_logo.200x200.png" class="logo_form align-self-center ml-3"> #}
     </div>
   </div>
 </header>
@@ -289,7 +289,7 @@
           <div class="col-sm-6">
           <label class="col-form-label">Role:</label>
           <select id="role_type" name="role_type" class="form-control">
-   
+            <option value="Office">Office</option> 
             <optgroup label="---- Hospital  ----">
               <option value="Hospital_patient">Hospital patient</option>
               <option value="Nurse_working">Nurse working</option>
@@ -392,7 +392,7 @@
         <div class="col-sm-6">
           <label class="col-form-label">Role:</label>
           <select id="role_type2" name="role_type2" class="form-control">
-            
+            <option value="Office2">Office</option> 
             <optgroup label="---- Hospital  ----">
               <option value="Hospital_patient2">Hospital patient</option>
               <option value="Nurse_working2">Nurse working</option>
@@ -643,35 +643,29 @@
     <li>Delta (also known as B.1.617.2, first identified in India, Oct 2020).</li>
     <li>Omicron (also known as B.1.1.529, first identified in South Africa, November 2021).</li>
   </ul>
-  Modify the default as necessary, according to local area prevalence e.g. for <a href="https://www.covid19.admin.ch/fr/epidemiologic/virus-variants?detGeo=GE">Geneva</a>
-  or <a href="https://www.santepubliquefrance.fr/dossiers/coronavirus-covid-19/covid-19-cartographie-des-variants-en-france-donnees-par-region-et-par-departement">Ain (France)</a>.<br>
+  Modify the default as necessary, according to local area prevalence <br>
+  {# e.g. for <a href="https://www.covid19.admin.ch/fr/epidemiologic/virus-variants?detGeo=GE">Geneva</a>
+  or <a href="https://www.santepubliquefrance.fr/dossiers/coronavirus-covid-19/covid-19-cartographie-des-variants-en-france-donnees-par-region-et-par-departement">Ain (France)</a>.<br> #}
   <b>Ventilation data:</b> <br>
   <ul>
     <li>Mechanical ventilation = the HVAC supply of fresh air. Check the flow rates with the concerned technical department.</li>
     <li>Natural ventilation = the type of window opening. The opening distance is between the fixed frame and movable part when open (commonly used values are window height of 1.6m and window opening between 0.15m and 0.6m). In case of periodic opening, specify the duration (e.g. for 10 min) and frequency (e.g. every 60 min).</li>
-    <li>HEPA filtration = the air flow of the device. The following values are based on the different fan velocities of a specific commercial device proposed by the HSE Unit:</li>
+    <li>Flow-R Bio-V devices treatment. The 4 flow rates proposed are :</li>
     <ul>
-        <li>Level 6 (max) = 430 m<sup>3</sup>/h (noisy),</li>
-        <li>Level 5 = 250 m<sup>3</sup>/h (ok w.r.t. noise, recommended),</li>
-        <li>Level 4 = 130 m<sup>3</sup>/h (silent),</li>
-        <li>Level 3 = 95 m<sup>3</sup>/h (silent).</li>
+    {# m<sup>3</sup>#}
+        <li>Level 1 : very silent,</li>
+        <li>Level 2 : silent,</li>
+        <li>Level 3 : a little noisy,</li>
+        <li>Level 4 : Noisy not recommended in presence of people. 
+        Can be used to disinfectvery fast a room during breaks.</li>
     </ul>
   </ul>
-  <b>Activity types:</b><br>
-  The type of activity applies to both the infected and exposed persons:
-  <ul>
+ <b>Activity types:</b><br>
+  The type of activity applies to the infected and exposed persons separately.
+  <br/>
+  {# <ul>
     <li>Office = all seated, talking 33% of the time,</li>
-    <li>Meeting = all seated, talking time shared between all persons,</li>
-    <li>Call Centre = all seated, continuous talking,</li>
-    <li>Control Room (day shift) = all seated, talking 50% of the time,</li>
-    <li>Control Room (night shift) = all seated, talking 10% of the time,</li>
-    <li>Library = all seated, no talking, just breathing,</li>
-    <li>Laboratory = light physical activity, talking 50% of the time,</li>
-    <li>Workshop = moderate physical activity, talking 50% of the time,</li>
-    <li>Conference/Training = speaker/trainer standing and talking, rest seated and talking quietly.
-    Speaker/Trainer assumed infected (worst case scenario),</li>
-    <li>Gym = heavy exercise, no talking, just breathing.</li>
-  </ul>
+  </ul> #}
   <b>Activity breaks:</b><br>
   <ul>
     <li>If coffee breaks are included, they are spread out evenly throughout the day,
@@ -693,10 +687,10 @@
 <div class="collapse container container--padding" id="collapseDisclaimer">
   <div class="card card-body">
     <p> 
-        CARA is a risk assessment tool developed to model the concentration of viruses in enclosed spaces, in order to inform space-management decisions.
+        FARC is a risk assessment tool developed to model the concentration of viruses in enclosed spaces, in order to inform space-management decisions.
     </p>
     <p>
-        CARA models the concentration profile of virions in enclosed spaces with clear and intuitive graphs.
+        FARC models the concentration profile of virions in enclosed spaces with clear and intuitive graphs.
         The user can set a number of parameters, including room volume, exposure time, activity type, mask-wearing and ventilation.
         The report generated indicates how to avoid exceeding critical concentrations and chains of airborne transmission in spaces such as individual offices, meeting rooms and labs.
     </p>
@@ -712,7 +706,7 @@
     <p>
         Note that this model applies a deterministic approach, i.e., it is assumed at least one person is infected and shedding viruses into the simulated volume.
         Nonetheless, it is also important to understand that the absolute risk of infection is uncertain, as it will depend on the probability that someone infected attends the event.
-        The model is most useful for comparing the impact and effectiveness of different mitigation measures such as ventilation, filtration, exposure time, physical activity and
+        The model is most useful for comparing the impact and effectiveness of different mitigation measures such as ventilation, air disinfection, exposure time, physical activity and
         the size of the room, only considering long-range airborne transmission of COVID-19 in indoor settings.
     </p>
     <p>
@@ -722,7 +716,7 @@
         Each event modelled is unique, and the results generated therein are only as accurate as the inputs and assumptions.
     </p>
     <p>
-        CARA has not undergone review, approval or certification by competent authorities, and as a result, it cannot be considered
+        FARC has not undergone review, approval or certification by competent authorities, and as a result, it cannot be considered
         as a fully endorsed and reliable tool, namely in the assessment of potential viral emissions from infected hosts to be modelled.
     </p>  </div>
 </div>
