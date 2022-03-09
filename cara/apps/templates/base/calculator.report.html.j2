@@ -49,12 +49,13 @@
 	<script>
 	function downloadPdf() {
 		//var imgData= new Image()
-		var doc = new jsPDF({
+		{# var doc = new jsPDF({
 			orientation: 'p',
 			unit: 'mm',
 			format: 'a4',
 			putOnlyUsedFonts:true
-		});
+		}); #}
+		var doc =new jsPDF('p','pt','a4');
 		var specialElementHandlers = {
 			"#editor": function(element, renderer){
 				return true;
@@ -62,7 +63,7 @@
 		};
 		//doc.addImage(imgData, 'JPEG', 15, 40, 180, 160);
 		doc.fromHTML($('body').get(0), 10, 10, {
-			"width": 170,
+			"width": 980,
 			"elementHandlers":specialElementHandlers
 
 		},
@@ -105,9 +106,10 @@
 		<button type="button" class="btn btn-outline-dark align-self-center" id="download-pdf" style="margin-right: -100pt" onclick="sendEmail(); ">Send Report</button>
 		
 
-		<a href="{{ permalink.link }}" style="float: left;" id="pdf_qrcode_aref" class="align-self-center invisible mr-0"><div id="pdf_qrcode"></div></a>
-			<button type="button" class="btn btn-outline-dark align-self-center" id="download-pdf" style="margin-right: -100pt" onclick="downloadPdf();">download Report</button>	
+		{# <a href="{{ permalink.link }}" style="float: left;" id="pdf_qrcode_aref" class="align-self-center invisible mr-0"><div id="pdf_qrcode"></div></a> #}
+			
 	</div>
+	<button type="button" class="btn btn-outline-dark align-self-center" id="download-pdf" style="margin-right: -100pt" onclick="downloadPdf();">download Report</button>	
 
 {% endblock report_header %}
 
@@ -238,7 +240,7 @@
 			{% endblock report_results %}
 
 			{% block report_footer %}
-				<div class="card bg-light mb-3" id="link-results">
+				{# <div class="card bg-light mb-3" id="link-results">
 					<div class="card-header"><strong>Link to reproduce results </strong> 
 					<button class="icon_button p-0 float-right" data-toggle="collapse" href="#collapseQRcode" role="button" aria-expanded="true" aria-controls="collapseQRcode">
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-expand" viewBox="0 0 16 16">
@@ -260,7 +262,7 @@
 						</div>
 					</div>
 				</div>
-				<div style="clear: both;"></div>
+				<div style="clear: both;"></div> #}
 			{% endblock report_footer %}
 		</div>
 
