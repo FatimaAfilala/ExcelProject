@@ -24,6 +24,7 @@ While the SARS-CoV-2 virus is in circulation among the population, the notion of
 Each event modelled is unique, and the results generated therein are only as accurate as the inputs and assumptions.
 
 ## Authors
+
 CARA was developed by following members of CERN - European Council for Nuclear Research (visit https://home.cern/):
 
 Andre Henriques<sup>1</sup>, Luis Aleixo<sup>1</sup>, Marco Andreini<sup>1</sup>, Gabriella Azzopardi<sup>2</sup>, James Devine<sup>3</sup>, Philip Elson<sup>4</sup>, Nicolas Mounet<sup>2</sup>, Markus Kongstein Rognlien<sup>2,6</sup>, Nicola Tarocco<sup>5</sup>
@@ -36,8 +37,8 @@ Andre Henriques<sup>1</sup>, Luis Aleixo<sup>1</sup>, Marco Andreini<sup>1</sup>
 <sup>6</sup>Norwegian University of Science and Technology (NTNU)<br>
 
 ### Citation
-A. Henriques, M. Andreini, G. Azzopardi, J. Devine, P. Elson, N. Mounet, M. Kongstein, N. Tarocco. CARA - COVID Airborne Risk Assessment tools. CERN (2021).
 
+A. Henriques, M. Andreini, G. Azzopardi, J. Devine, P. Elson, N. Mounet, M. Kongstein, N. Tarocco. CARA - COVID Airborne Risk Assessment tools. CERN (2021).
 
 ## Applications
 
@@ -45,11 +46,9 @@ A. Henriques, M. Andreini, G. Azzopardi, J. Devine, P. Elson, N. Mounet, M. Kong
 
 A risk assessment tool which simulates the long range airborne spread of the SARS-CoV-2 virus for space managers.
 
-
 ### CARA Expert App
 
 A tool to interact with various parameters of the CARA model.
-
 
 ## Disclaimer
 
@@ -57,7 +56,6 @@ CARA has not undergone review, approval or certification by competent authoritie
 
 The software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and non-infringement.
 In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
-
 
 ## Running CARA locally
 
@@ -69,6 +67,20 @@ In order to run cara locally with docker, run the following:
 
 This will start a local version of CARA, which can be visited at http://localhost:8080/.
 
+## Create Docker container
+
+To create a docker image containing FARC run:
+
+`docker build -t farc:latest -t farc:1.0.1 .`
+
+Replace 1.0.1 with the current version.
+
+Then to run the created container locally with docker run:
+
+`docker run -it -d -p 9000:8080 farc:latest`
+
+You can replace 9000 with any desired port.
+This will start a local version FARC, which can be visited at http://localhost:9000/.
 
 ## Development guide
 
@@ -109,7 +121,6 @@ voila cara/apps/expert/cara.ipynb --port=8080
 
 Then visit http://localhost:8080.
 
-
 ### Running the tests
 
 ```
@@ -128,11 +139,13 @@ docker build ./app-config/auth-service -t auth-service
 ```
 
 Get the client secret from the CERN Application portal for the `cara-test` app. See [CERN-SSO-integration](#CERN-SSO-integration) for more info.
+
 ```
 read CLIENT_SECRET
 ```
 
 Define some env vars (copy/paste):
+
 ```
 export COOKIE_SECRET=$(openssl rand -hex 50)
 export OIDC_SERVER=https://auth.cern.ch/auth
@@ -142,6 +155,7 @@ export CLIENT_SECRET
 ```
 
 Run docker-compose:
+
 ```
 cd app-config
 CURRENT_UID=$(id -u):$(id -g) docker-compose up
@@ -153,9 +167,9 @@ Then visit http://localhost:8080/.
 
 The https://cern.ch/cara application is running on CERN's OpenShift platform. In order to set it up for the first time, we followed the documentation at https://cern.service-now.com/service-portal?id=kb_article&n=KB0004498. In particular we:
 
- * Added the OpenShift application deploy key to the GitLab repository
- * Created a Python 3.6 (the highest possible at the time of writing) application in OpenShift
- * Configured a generic webhook on OpenShift, and call that from the CI of the GitLab repository
+-   Added the OpenShift application deploy key to the GitLab repository
+-   Created a Python 3.6 (the highest possible at the time of writing) application in OpenShift
+-   Configured a generic webhook on OpenShift, and call that from the CI of the GitLab repository
 
 ### Updating the test-cara.web.cern.ch instance
 
@@ -166,7 +180,6 @@ understanding why you are doing it. Syntactically, it will look something like (
 but it may be origin if you haven't configured it differently):
 
     git push --force upstream name-of-local-branch:live/test-cara
-
 
 ## OpenShift templates
 
@@ -231,39 +244,39 @@ For CI usage, we also suggest creating a service account:
 oc create sa gitlab-config-checker
 ```
 
-Under ``Resources`` -> ``Membership`` enable the ``View`` role for this new service account.
+Under `Resources` -> `Membership` enable the `View` role for this new service account.
 
-To get this new user's authentication token go to ``Resources`` -> ``Secrets`` and locate the token in the newly
-created secret associated with the user (in this case ``gitlab-config-checker-token-XXXX``).
+To get this new user's authentication token go to `Resources` -> `Secrets` and locate the token in the newly
+created secret associated with the user (in this case `gitlab-config-checker-token-XXXX`).
 
 ### CERN SSO integration
 
 The SSO integration uses OpenID credentials configured in [CERN Applications portal](https://application-portal.web.cern.ch/).
 How to configure the application:
 
-* Application Identifier: `cara-test`
-* Homepage: `https://test-cara.web.cern.ch`
-* Administrators: `cara-dev`
-* SSO Registration:
-    * Protocol: `OpenID (OIDC)`
-    * Redirect URI: `https://test-cara.web.cern.ch/auth/authorize`
-    * Leave unchecked all the other checkboxes
-* Define new roles:
-    * Name: `CERN Users`
-        * Role Identifier: `external-users`
-        * Leave unchecked checkboxes
-        * Minimum Level Of Assurance: `CERN (highest)`
-        * Assign role to groups: `cern-accounts-primary` e-group
-    * Name: `External accounts`
-        * Role Identifier: `admin`
-        * Leave unchecked checkboxes
-        * Minimum Level Of Assurance: `Any (no restrictions)`
-        * Assign role to groups: `cara-app-external-access` e-group
-    * Name: `Allowed users`
-        * Role Identifier: `allowed-users`
-        * Check `This role is required to access my application`
-        * Minimum Level Of Assurance:`Any (no restrictions)`
-        * Assign role to groups: `cern-accounts-primary` and `cara-app-external-access` e-groups
+-   Application Identifier: `cara-test`
+-   Homepage: `https://test-cara.web.cern.ch`
+-   Administrators: `cara-dev`
+-   SSO Registration:
+    -   Protocol: `OpenID (OIDC)`
+    -   Redirect URI: `https://test-cara.web.cern.ch/auth/authorize`
+    -   Leave unchecked all the other checkboxes
+-   Define new roles:
+    -   Name: `CERN Users`
+        -   Role Identifier: `external-users`
+        -   Leave unchecked checkboxes
+        -   Minimum Level Of Assurance: `CERN (highest)`
+        -   Assign role to groups: `cern-accounts-primary` e-group
+    -   Name: `External accounts`
+        -   Role Identifier: `admin`
+        -   Leave unchecked checkboxes
+        -   Minimum Level Of Assurance: `Any (no restrictions)`
+        -   Assign role to groups: `cara-app-external-access` e-group
+    -   Name: `Allowed users`
+        -   Role Identifier: `allowed-users`
+        -   Check `This role is required to access my application`
+        -   Minimum Level Of Assurance:`Any (no restrictions)`
+        -   Assign role to groups: `cern-accounts-primary` and `cara-app-external-access` e-groups
 
 Copy the client id and client secret and use it below.
 
