@@ -83,7 +83,7 @@ class FormData:
     #: The default values for undefined fields. Note that the defaults here
     #: and the defaults in the html form must not be contradictory.
     _DEFAULTS: typing.ClassVar[typing.Dict[str, typing.Any]] = {
-        # 'activity_type': 'office',
+        'activity_type': 'office',
         'role_type':'Hospital_patient',
         'role_type2':'Hospital_patient2',
         'air_changes': 0.,
