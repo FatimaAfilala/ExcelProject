@@ -103,13 +103,13 @@
 			<h2 class="header_text mb-0">REPORT</h1>
 			<p class="mb-0" id="report_version"> Created {{ creation_date }} using FARC calculator version v{{ form.calculator_version }}</p>
 		</div>
-		<button type="button" class="btn btn-outline-dark align-self-center" id="download-pdf" style="margin-right: -100pt" onclick="sendEmail(); ">Send Report</button>
-		
+		{# <button type="button" class="btn btn-outline-dark align-self-center" id="download-pdf" style="margin-right: -100pt" onclick="sendEmail(); ">Send Report</button> #}
+		<button type="button" class="btn btn-outline-dark align-self-center" id="download-pdf" style="margin-right: -100pt" onclick="print(); ">Print Report</button> 
 
 		{# <a href="{{ permalink.link }}" style="float: left;" id="pdf_qrcode_aref" class="align-self-center invisible mr-0"><div id="pdf_qrcode"></div></a> #}
 			
 	</div>
-	<button type="button" class="btn btn-outline-dark align-self-center" id="download-pdf" style="margin-right: -100pt" onclick="downloadPdf();">download Report</button>	
+	{# <button type="button" class="btn btn-outline-dark align-self-center" id="download-pdf" style="margin-right: -100pt" onclick="downloadPdf();">download Report</button>	 #}
 
 {% endblock report_header %}
 
