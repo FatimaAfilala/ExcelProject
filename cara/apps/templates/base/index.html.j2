@@ -5,8 +5,11 @@
     {# <div style="height: 5em; display: block;"></div> #}
 <header class= "bg-light">
   <div class="container container--padding">
-    <img src="/static/images/cara_full_text.png" class="logo d-block m-auto" id="desktop_logo">
-    <img src="/static/images/cara_full_logo.png" class="logo d-none m-auto" id="mobile_logo">
+    
+    <div style="float: left"><img src="/static/images/Logo_Flow_R.png" class="logo d-block m-auto" id="desktop_logo"> </div>
+    <div><h1>FARC | Flow-R Airborne Risk Calculator</h1></div>
+    {# <img src="/static/images/cara_full_logo.png" class="logo d-none m-auto" id="mobile_logo"> #}
+    
   </div>
 </header>
    
@@ -19,13 +22,17 @@
       <h2 class="paragraph-title">Introduction</h2><br>
       <div>
           <p>
-          CARA is a risk assessment tool developed to model the concentration of viruses in enclosed spaces, in order to inform space-management decisions.
-          It does this by simulating the long-range airborne spread SARS-CoV-2 virus in a finite volume, assuming homogenous mixing, and it estimates the risk of COVID-19 airborne transmission therein.
-          Please see the <a href="/about">About</a> page for more details on the methodology, assumptions and limitations of CARA.
+          FARC is a risk assessment tool developed to model the concentration of viruses in enclosed spaces, 
+          in order to inform space-management decisions. It does this by simulating the long-range airborne spread SARS-CoV-2 virus in a finite volume, 
+          assuming homogenous mixing, and it estimates the risk of COVID-19 airborne transmission therein. Please see the <a href="/about">About</a> page for more details on the methodology, 
+          assumptions and limitations of FARC.
           </p>
+          <br/>
           <p>
-          The full CARA source code can be accessed freely under an Apache 2.0 open source license from our <a href="https://gitlab.cern.ch/cara/cara">code repository</a>.
-          It includes detailed instructions on how to run your own version of this tool.
+          FARC is based on CARA tool and released under Apache 2.0 licence. 
+          The full CARA source code can be accessed freely under an Apache 2.0 open source license from this code repository. 
+          It includes detailed instructions on how to run your own version of this tool. We wish to thank the CARA team from CERN in Geneva 
+          and all around the world for their great work on this tool more in about page.
           </p>
           <br>
       </div>
@@ -40,9 +47,16 @@
     <div class="d-flex flex-row" >
       <h2 class="paragraph-title pr-4 align-self-center">Apps:</h2>
       <br>
-      <div class="pr-3"><a href="{{ calculator_prefix }}" role="button" class="btn btn-lg btn-outline-primary"><div class="d-flex d-row"><i class="icon-calculator"></i><span class="pl-2">Calculator</div></a></div>
+      <div class="pr-3">
+        <a href="{{ calculator_prefix }}" role="button" class="btn btn-lg btn-outline-primary">
+          <div class="d-flex d-row">
+            {# <i class="icon-calculator"></i> #}
+              <span class="pl-2">Calculator
+          </div>
+        </a>
+      </div>
       <br>
-      <div class="expert_app_button"><a href="https://cara.web.cern.ch/expert-app" role="button" class="btn btn-lg btn-outline-secondary"><div class="d-flex d-row"><i class="icon-expert"></i><span class="pl-2">Expert (beta)</div></a></div>
+      {# <div class="expert_app_button"><a href="https://cara.web.cern.ch/expert-app" role="button" class="btn btn-lg btn-outline-secondary"><div class="d-flex d-row"><i class="icon-expert"></i><span class="pl-2">Expert (beta)</div></a></div> #}
     </div>
     <hr width="95%">
   </div>

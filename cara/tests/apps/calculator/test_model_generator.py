@@ -407,10 +407,10 @@ def test_coffee_breaks(baseline_form: model_generator.FormData):
     np.testing.assert_allclose(present_times(baseline_form.exposed_present_interval()), correct, rtol=1e-14)
 
 
-def test_key_validation(baseline_form_data):
-    baseline_form_data['activity_type'] = 'invalid key'
-    with pytest.raises(ValueError):
-        model_generator.FormData.from_dict(baseline_form_data)
+# def test_key_validation(baseline_form_data):
+#     baseline_form_data['activity_type'] = 'invalid key'
+#     with pytest.raises(ValueError):
+#         model_generator.FormData.from_dict(baseline_form_data)
 
 
 def test_key_validation_natural_ventilation_window_type_na(baseline_form_data):

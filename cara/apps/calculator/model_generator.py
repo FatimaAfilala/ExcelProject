@@ -31,7 +31,7 @@ _DEFAULT_MC_SAMPLE_SIZE = 50000
 
 @dataclasses.dataclass
 class FormData:
-    activity_type: str
+    # activity_type: str
     role_type: str
     role_type2: str
     air_changes: float
@@ -230,7 +230,8 @@ class FormData:
                 raise ValueError(
                     f"{start_name} must be less than {end_name}. Got {start} and {end}.")
 
-        validation_tuples = [('activity_type', ACTIVITY_TYPES), 
+        validation_tuples = [
+                            #  ('activity_type', ACTIVITY_TYPES), 
                              ('role_type', ROLE_TYPE),  
                              ('role_type2', ROLE_TYPE2),   
                              ('exposed_coffee_break_option', COFFEE_OPTIONS_INT), 
@@ -947,7 +948,7 @@ def build_expiration(expiration_definition) -> models._ExpirationBase:
 def baseline_raw_form_data():
     # Note: This isn't a special "baseline". It can be updated as required.
     return {
-        'activity_type': 'office',
+        # 'activity_type': 'office',
         'role_type':'',
         'role_type2':'',
         'air_changes': '',
@@ -1015,7 +1016,7 @@ def baseline_raw_form_data():
     }
 
 
-ACTIVITY_TYPES = {'office', 'meeting', 'training', 'callcentre', 'controlroom-day', 'controlroom-night', 'library', 'workshop', 'lab', 'gym'}
+# ACTIVITY_TYPES = {'office', 'meeting', 'training', 'callcentre', 'controlroom-day', 'controlroom-night', 'library', 'workshop', 'lab', 'gym'}
 ROLE_TYPE ={'Hospital_patient', 'Nurse_working', 'Physician_working', 'Office_worker', 'Workshop_worker', 'Meeting_participant', 'Meeting_leader', 'Student_sitting', 'Professor_teaching', 'Professor_conferencing', 'Concert_musician_soft_music','Concert_musician_rock', 'Concert_singer', 
         'Concert_spectator_standing', 'Concert_spectator_sitting', 'Museum_visitor', 'Theater_spectator', 'Theater_actor', 'Conferencer', 'Conference_attendee', 'Guest_standing', 'Guest_sitting', 'Server', 'Barrista', 'Nightclub_dancing', 'Nightclub_sitting', 
         'Customer_standing', 'Cashier_sitting', 'Vendor_standing', 'Musculation', 'Floor_gymnastics', 'Team_competition', 'Trip_in_elevator'}

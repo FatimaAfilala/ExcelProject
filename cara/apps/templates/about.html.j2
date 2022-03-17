@@ -10,8 +10,8 @@ This pandemic clearly raised increased awareness on airborne transmission of res
 Out of the main modes of viral transmission, the airborne route of SARS-CoV-2 seems to have a significant importance to the spread of COVID-19 infections world-wide, hence proper guidance to building engineers or facility managers, on how to prevent on-site transmission, is essential.<br>
 For information on the Airborne Transmission of SARS-CoV-2, feel free to check out the HSE Seminar: <a href=https://cds.cern.ch/record/2743403>https://cds.cern.ch/record/2743403</a>.<br>
 <br><br>
-<h1 class="paragraph-title">What is CARA?</h1><br>
-CARA stands for COVID Airborne Risk Assessment and was developed in the spring of 2020 to better understand and quantify the risk of long-range airborne spread of SARS-CoV-2 virus in workplaces. CARA comes with different applications that allow more or less flexibility in the input parameters:
+<h1 class="paragraph-title">What is FARC?</h1><br>
+FARC stands for Flow-R Airborne Risk Calculator and is derivated  from CARA COVID Airborne Risk Assessment and was developed from spring of 2020 to better understand and quantify the risk of long-range airborne spread of SARS-CoV-2 virus in workplaces. CARA comes with different applications that allow more or less flexibility in the input parameters:
 <ul>
 	<li><a href='{{ calculator_prefix }}'>CARA calculator app</a></li>
 	<li><a href='/expert-app'>CARA expert app</a></li>
@@ -32,27 +32,71 @@ The methodology of the model is divided into five parts:
 	<li>Estimating the probability of a COVID-19 infection (or secondary transmission) and the expected number of new cases arising from the event </li>
 </ol>
 <br>
-<h1 class="paragraph-title">What is the aim of CARA?</h1><br>
-Although the user is able to calculate the infection probability of a stand-alone event with a pre-defined set of protection measures, the main utility of CARA is to compare the relative impact of different measures and/or combination of measure. For example:
+<h1 class="paragraph-title">What is the aim of FARC?</h1><br>
+Although the user is able to calculate the infection probability of a stand-alone event with a pre-defined set of protection measures, the main utility of FARC is to compare the relative impact of different measures and/or combination of measure. For example:
 <ul>
 	<li>Compare keeping a window slightly open vs one or two windows open entirely</li>
 	<li>Compare opening one entire window every 2h for 10 min vs keeping half a window open all day</li>
 	<li>Compare the effect of an FFP2 with respect to a Type I surgical mask</li>
-	<li>Adapt the maximum occupancy considering the effect of HEPA filters</li>
+	<li>Adapt the maximum occupancy considering the effect of disinfection devices</li>
 	<li>Etc…</li>
 </ul>
 	
-<h1 class="paragraph-title">Main Developers:</h1><br>
+<h1 class="paragraph-title">Main Developers of CARA:</h1><br>
 {{ text_blocks['Main Developers'] }}
 <br>
-<h2 class="paragraph-title">Code Contributors:</h2><br>
+<h2 class="paragraph-title">Code Contributors of CARA:</h2><br>
 {{ text_blocks['Code Contributors'] }}
 <br>
+<h1 class="paragraph-title">Contributors of FARC:</h1><br>
+
+<h4 class="contributors">Olivier Perraud<sup>1</sup>, Serge Lebrun<sup>2</sup>, Vincent Kozlik<sup>3</sup>, Dr. Valérie Héquet<sup>4</sup>, Fatima Afilal<sup>5</sup>, Simon Moro<sup>6</sup></h4>
+<sup>1</sup> CEO of Ingenica group and Ingenica-LLI<br>
+<sup>2</sup>Head of Engineering of Ingenica-LLI<br>
+<sup>3</sup>Flow-R Products manager Ingenica-LLI<br>
+<sup>4</sup>IMT Atlantique teacher and researcher (HDR)<br>
+<sup>5</sup>IMT Atlantique student<br>
+<sup>6</sup>IMT Atlantique student<br>
+<br>
+
 <h1 class="paragraph-title">Acknowledgements:</h1><br>
 {{ text_blocks['Acknowledgements'] }}
 <br>
 <a id="references_block" style="color:#2f4858"><h1 class="paragraph-title">References:</h1></a><br>
 {{ text_blocks['References'] }}
+
+<br>
+<a id="references_block" style="color:#2f4858"><h1 class="paragraph-title">Licence:</h1></a><br>
+<ul style="list-style-type:none">
+<li>FARC is Apache 2.0 Licensed</li>
+
+<li>Copyright 2022 Ingenica-LLI</li>
+
+<li>Copyright 2020-2022 CARA<li>
+
+<li>Licensed under the Apache License, Version 2.0 (the "License")</li>
+
+<li>You may  use this site in compliance with the License.</li>
+
+<li>You may obtain a copy of the License at <a href=http://www.apache.org/licenses/LICENSE-2.0>APACHE LICENSE</a>
+
+<li>The source code of CARA has been modified by Ingenica-LLI to :</li>
+
+<ul>
+	<li>Implement Bio-V devices from Flow-R</li>
+
+	<li>Add new activities and roles</li>
+
+	<li>Create separate roles for infected and exposed people</li>
+
+	<li>Create specific alternative cases</li>
+
+	<li>Modify the web pages design and presentation</li>
+
+	<li>Modify the report design and presentation</li>
+</ul>
+
+</ul>
 
 <div class="text-component text-component-page clearfix"></div>
 <br>
