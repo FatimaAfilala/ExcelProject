@@ -375,9 +375,7 @@
 								</ul>
 							<li><p class="data_text">
 							Role type for exposed occupant(s):
-							{% if form.role_type == "Office" %}
-							Office
-							{% elif form.role_type == "Hospital_patient" %}
+							{% if form.role_type == "Hospital_patient" %}
 							Hospital patient
 							{% elif form.role_type == "Nurse_working" %}
 							Nurse working
@@ -461,9 +459,7 @@
 							</ul>
 							<li><p class="data_text">
 							Role type for infected occupant(s):
-							{% if form.role_type2 == "Office2" %}
-							Office
-							{% elif form.role_type2 == "Hospital_patient2" %}
+							{% if form.role_type2 == "Hospital_patient2" %}
 							Hospital patient
 							{#office – typical scenario with all persons seated, talking occasionally (talking assumed for 1/3rd of the time). #}
 							{% elif form.role_type2 == "Nurse_working2" %}
