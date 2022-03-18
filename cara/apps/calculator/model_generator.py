@@ -403,11 +403,11 @@ class FormData:
                 speed=self.uv_speed_4
                 number=self.uv_number_4
 
-            with open(os.getcwd()+'\\cara\\config_BR.json') as json_file:
+            with open(os.getcwd()+'/cara/config_BR.json') as json_file:
                 data = json.load(json_file)
                 Q2 = data[self.uv_device]["Q2"]
                 doseQ2 = data[self.uv_device]["Dose_Q2"]
-            with open(os.getcwd()+'\\cara\\config_D90.json') as json_file:
+            with open(os.getcwd()+'/cara/config_D90.json') as json_file:
                 data = json.load(json_file)
                 if self.virus_type in accepted_viruses:
                     D90 = data[self.virus_type]
