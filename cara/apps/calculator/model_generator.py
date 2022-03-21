@@ -31,7 +31,7 @@ _DEFAULT_MC_SAMPLE_SIZE = 50000
 
 @dataclasses.dataclass
 class FormData:
-    # activity_type: str
+    activity_type: str
     role_type: str
     role_type2: str
     air_changes: float
