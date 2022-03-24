@@ -33,14 +33,24 @@ The CARA repository makes use of Git's Large File Storage (LFS) feature.
 You will need a working installation of git-lfs in order to run CARA in development mode.
 See https://git-lfs.github.com/ for installation instructions.
 
-### Installing CARA in editable mode
+### Installing CARA in editable mode (DEV)
+
+## Install git and python 
+
+You might wanna use a virtual environnement before installing dependencies.
+
+Git :    https://git-scm.com/downloads
+Python : https://www.python.org/downloads/
+Pip :    https://www.liquidweb.com/kb/install-pip-windows/
+
+## Retrieve project files and install dependencies
 
 ```
 git lfs pull   # Fetch the data from LFS
 pip install -e .   # At the root of the repository
 ```
 
-### Running the COVID calculator app in development mode
+### Running the COVID calculator app in development mode (DEV)
 
 ```
 python -m cara.apps.calculator
