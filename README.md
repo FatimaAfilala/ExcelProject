@@ -6,9 +6,13 @@ As of today, you need to retrieve the files of the project locally to create a d
 
 ## Create Docker container & run it
 
-Once you have retrieved the files, place yourself in the folder "/ExcelProject" :
+Once you have retrieved the files (with git clone), place yourself in the folder "/ExcelProject" :
 
 `cd ExcelProject`
+
+Pull the large file with git-lfs:
+
+`git lfs pull`
 
 Now, you can create a docker image containing FARC run:
 
@@ -18,7 +22,7 @@ Replace 1.0.1 with the current version.
 
 Then to run the created container locally with docker run:
 
-`docker run -it -d -p 9000:8080 farc:latest`
+`docker run -d -p 9000:8080 farc:latest`
 
 You can replace 9000 with any desired port.
 This will start a local version FARC, which can be visited at http://localhost:9000/.
